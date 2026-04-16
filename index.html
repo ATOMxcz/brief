@@ -2,1028 +2,1377 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PROYECTOS LEVZEN — Sistema Operativo</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Levzen — Soporte Interno</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
+  /* ===== CSS VARIABLES ===== */
   :root {
-    --green: #8cb73c;
-    --black: #0a0a0a;
-    --surface: #111;
-    --surface2: #181818;
-    --surface3: #202020;
-    --border: #272727;
-    --text: #efefef;
-    --muted: #777;
-    --dim: #444;
-
-    /* colores por área */
-    --a1: #8cb73c;   /* ventas */
-    --a2: #e05555;   /* cobranza */
-    --a3: #5da8f0;   /* operación */
-    --a4: #c136c4;   /* catálogo */
-    --a5: #45c090;   /* marketing */
-    --a6: #f0b429;   /* dirección */
+    --green: #7FB239;
+    --green-dark: #5f8a26;
+    --green-dim: rgba(127, 178, 57, 0.12);
+    --green-glow: rgba(127, 178, 57, 0.25);
+    --bg: #0a0a0a;
+    --bg2: #111111;
+    --bg3: #181818;
+    --bg4: #202020;
+    --border: rgba(127, 178, 57, 0.18);
+    --border-subtle: rgba(255,255,255,0.06);
+    --text: #f0f0f0;
+    --text-muted: #888;
+    --text-dim: #555;
+    --nav-h: 64px;
+    --radius: 14px;
+    --radius-sm: 8px;
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
+  /* ===== RESET ===== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
   body {
-    font-family: 'Poppins', sans-serif;
-    background: var(--black);
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
     color: var(--text);
     min-height: 100vh;
+    padding-bottom: calc(var(--nav-h) + 16px);
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
   }
+  a { text-decoration: none; color: inherit; }
+  ul { list-style: none; }
+  button { cursor: pointer; font-family: inherit; border: none; }
 
-  /* ── HEADER ── */
-  header {
-    background: var(--surface);
+  /* ===== SCROLLBAR ===== */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--green-dark); border-radius: 4px; }
+
+  /* ===== UTILITY ===== */
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+  .container { max-width: 480px; margin: 0 auto; padding: 0 16px; }
+  .section-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    color: var(--green);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .hidden { display: none !important; }
+
+  /* ===== HEADER ===== */
+  #header {
+    background: var(--bg);
     border-bottom: 1px solid var(--border);
-    padding: 0 28px;
-    height: 56px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     position: sticky;
     top: 0;
-    z-index: 50;
+    z-index: 100;
+    padding: 12px 0;
   }
-
-  .logo { display: flex; align-items: center; gap: 9px; }
-  .logo svg { width: 26px; height: 26px; }
-  .logo-text { font-size: 16px; font-weight: 800; letter-spacing: 2.5px; color: var(--green); }
-  .logo-text em { color: var(--text); font-style: normal; }
-  .header-meta { font-size: 11px; color: var(--muted); letter-spacing: 0.5px; }
-
-  /* ── WRAP ── */
-  .wrap { max-width: 1160px; margin: 0 auto; padding: 32px 28px 64px; }
-
-  .page-top { margin-bottom: 24px; }
-  .page-title { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
-  .page-desc { font-size: 12px; color: var(--muted); }
-
-  /* ── TABS ── */
-  .tabs {
+  .header-inner {
     display: flex;
-    gap: 2px;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 28px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0 16px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .logo-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .logo-icon {
+    width: 32px;
+    height: 32px;
+  }
+  .logo-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 2px;
+    color: var(--green);
+  }
+  .header-badge {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text-muted);
+    background: var(--bg3);
+    border: 1px solid var(--border-subtle);
+    padding: 4px 8px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
   }
 
-  .tab {
+  /* ===== HERO ===== */
+  #hero {
+    padding: 28px 16px 20px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    line-height: 1;
+    letter-spacing: 1px;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+  .hero-title span { color: var(--green); }
+  .hero-sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    font-weight: 400;
+    margin-bottom: 20px;
+  }
+
+  /* ===== SEARCH ===== */
+  .search-wrap {
+    position: relative;
+    margin-bottom: 20px;
+  }
+  .search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+  }
+  #search-input {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    padding: 13px 14px 13px 42px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  #search-input:focus {
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px var(--green-glow);
+  }
+  #search-input::placeholder { color: var(--text-dim); }
+  #search-clear {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 18px;
+    line-height: 1;
+    padding: 4px;
+    display: none;
+  }
+
+  /* ===== SEARCH RESULTS ===== */
+  #search-results {
+    display: none;
+    margin-bottom: 20px;
+  }
+  #search-results.active { display: block; }
+  .search-result-item {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    animation: fadeIn 0.15s ease;
+  }
+  .sr-info { flex: 1; }
+  .sr-name { font-weight: 600; font-size: 13px; color: var(--text); }
+  .sr-task { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .sr-wa {
+    background: var(--green);
+    border-radius: 8px;
+    padding: 8px 12px;
     font-size: 12px;
     font-weight: 600;
-    color: var(--muted);
-    padding: 8px 18px;
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -1px;
-    transition: color 0.15s;
+    color: #000;
     white-space: nowrap;
-  }
-
-  .tab:hover { color: var(--text); }
-  .tab.active { color: var(--green); border-bottom-color: var(--green); }
-
-  /* ── STAT ROW ── */
-  .stat-row { display: flex; gap: 12px; margin-bottom: 24px; }
-
-  .stat {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 14px 18px;
-    flex: 1;
-  }
-
-  .stat-label { font-size: 10px; font-weight: 700; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 6px; }
-  .stat-value { font-size: 26px; font-weight: 800; line-height: 1; color: var(--green); margin-bottom: 2px; }
-  .stat-value.yellow { color: #f0b429; }
-  .stat-value.dim    { color: var(--muted); }
-  .stat-value.blue   { color: #6aabf0; }
-  .stat-sub { font-size: 11px; color: var(--dim); }
-
-  /* ── TABLE BOX ── */
-  .table-box {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    overflow: hidden;
-    margin-bottom: 20px;
-  }
-
-  .table-head-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 18px;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface3);
-  }
-
-  .table-head-title { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; }
-
-  .table-count {
-    background: rgba(140,183,60,0.12);
-    border: 1px solid rgba(140,183,60,0.25);
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--green);
-    padding: 2px 8px;
-  }
-
-  .table-count.gray { background: rgba(100,100,100,0.1); color: var(--muted); border-color: rgba(100,100,100,0.2); }
-
-  table { width: 100%; border-collapse: collapse; }
-
-  th {
-    text-align: left;
-    padding: 9px 14px;
-    font-size: 10px;
-    font-weight: 700;
-    color: var(--dim);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    border-bottom: 1px solid var(--border);
-    white-space: nowrap;
-    background: var(--surface3);
-  }
-
-  td {
-    padding: 12px 14px;
-    font-size: 12.5px;
-    border-bottom: 1px solid var(--border);
-    vertical-align: top;
-  }
-
-  tr:last-child td { border-bottom: none; }
-  tr:hover td { background: rgba(255,255,255,0.015); }
-
-  .pname { font-weight: 600; color: var(--text); font-size: 13px; line-height: 1.3; margin-bottom: 3px; }
-
-  /* ── BADGES ── */
-  .b {
-    display: inline-flex; align-items: center;
-    padding: 2px 8px; border-radius: 4px;
-    font-size: 10.5px; font-weight: 600; white-space: nowrap;
-  }
-
-  .b-activo  { background: rgba(140,183,60,0.13); color: #8cb73c; border: 1px solid rgba(140,183,60,0.28); }
-  .b-pausa   { background: rgba(120,120,120,0.1);  color: #666;    border: 1px solid rgba(120,120,120,0.18); }
-  .b-alta    { background: rgba(220,60,60,0.1);    color: #d95555; border: 1px solid rgba(220,60,60,0.22); }
-  .b-media   { background: rgba(240,180,41,0.1);   color: #c89020; border: 1px solid rgba(240,180,41,0.2); }
-  .b-i-alto  { background: rgba(140,183,60,0.11); color: #7aaa2e; border: 1px solid rgba(140,183,60,0.22); }
-  .b-i-medio { background: rgba(240,180,41,0.09); color: #b07a18; border: 1px solid rgba(240,180,41,0.17); }
-
-  /* ── ÁREA CHIP ── */
-  .area-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 10.5px;
-    font-weight: 600;
-    white-space: nowrap;
-  }
-
-  .area-chip .dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
     flex-shrink: 0;
   }
-
-  .ac-a1 { background: rgba(140,183,60,0.1);  color: var(--a1); border: 1px solid rgba(140,183,60,0.22); }
-  .ac-a2 { background: rgba(224,85,85,0.1);   color: var(--a2); border: 1px solid rgba(224,85,85,0.22); }
-  .ac-a3 { background: rgba(93,168,240,0.1);  color: var(--a3); border: 1px solid rgba(93,168,240,0.22); }
-  .ac-a4 { background: rgba(193,54,196,0.1);  color: var(--a4); border: 1px solid rgba(193,54,196,0.22); }
-  .ac-a5 { background: rgba(69,192,144,0.1);  color: var(--a5); border: 1px solid rgba(69,192,144,0.22); }
-  .ac-a6 { background: rgba(240,180,41,0.1);  color: var(--a6); border: 1px solid rgba(240,180,41,0.22); }
-
-  /* ── RESP TAGS ── */
-  .resp-block { display: flex; flex-direction: column; gap: 4px; }
-  .resp-row   { display: flex; align-items: flex-start; gap: 6px; line-height: 1.35; }
-
-  .resp-tag {
-    font-size: 9.5px; font-weight: 700; letter-spacing: 0.8px;
-    text-transform: uppercase; padding: 2px 5px; border-radius: 3px;
-    white-space: nowrap; flex-shrink: 0; margin-top: 1px;
-  }
-
-  .resp-paulo  { background: rgba(140,183,60,0.12); color: var(--green); border: 1px solid rgba(140,183,60,0.22); }
-  .resp-equipo { background: rgba(100,140,200,0.1);  color: #6aabf0;     border: 1px solid rgba(100,140,200,0.2); }
-  .resp-txt    { color: var(--muted); font-size: 11px; }
-
-  /* ── SIG ACC ── */
-  .sig-acc        { font-size: 11.5px; color: var(--muted); line-height: 1.45; }
-  .sig-acc.urgent { color: #d95555; font-weight: 600; }
-
-  /* ── FECHA ── */
-  .fecha     { font-size: 11px; color: var(--dim); white-space: nowrap; font-weight: 500; }
-  .fecha.hot { color: #d95555; font-weight: 700; }
-
-  /* ════════════════════════════════════
-     ÁREAS — tarjetas
-  ════════════════════════════════════ */
-  .areas-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 14px;
-    margin-bottom: 20px;
-  }
-
-  .area-card {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    overflow: hidden;
-  }
-
-  .area-card-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 13px 16px;
-    border-bottom: 1px solid var(--border);
-    gap: 10px;
-  }
-
-  .area-card-title-wrap {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-  }
-
-  .area-accent {
-    width: 3px;
-    border-radius: 2px;
-    height: 30px;
-    flex-shrink: 0;
-  }
-
-  .area-card-name {
+  #search-empty {
+    text-align: center;
+    padding: 24px;
+    color: var(--text-muted);
     font-size: 13px;
-    font-weight: 700;
-    color: var(--text);
-    line-height: 1.2;
   }
 
-  .area-card-obj {
-    font-size: 11px;
-    color: var(--muted);
-    margin-top: 1px;
+  /* ===== AREA PILLS ===== */
+  .area-pills-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin-bottom: 28px;
+    padding-bottom: 4px;
   }
-
-  /* carga badge */
-  .carga {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.8px;
-    text-transform: uppercase;
-    padding: 3px 9px;
-    border-radius: 4px;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-
-  .carga-alta  { background: rgba(220,60,60,0.12);   color: #d95555; border: 1px solid rgba(220,60,60,0.25); }
-  .carga-media { background: rgba(240,180,41,0.1);    color: #c89020; border: 1px solid rgba(240,180,41,0.2); }
-  .carga-baja  { background: rgba(100,100,100,0.1);   color: #666;    border: 1px solid rgba(100,100,100,0.18); }
-
-  .area-card-body {
-    padding: 13px 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .area-row {
+  .area-pills-wrap::-webkit-scrollbar { display: none; }
+  .area-pills {
     display: flex;
     gap: 8px;
-    align-items: flex-start;
+    white-space: nowrap;
+    padding-bottom: 2px;
   }
-
-  .area-row-label {
-    font-size: 10px;
-    font-weight: 700;
-    color: var(--dim);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    width: 76px;
-    flex-shrink: 0;
-    padding-top: 1px;
-  }
-
-  .area-row-val {
+  .area-pill {
+    background: var(--bg3);
+    border: 1px solid var(--border-subtle);
+    border-radius: 20px;
+    padding: 7px 14px;
     font-size: 12px;
-    color: var(--muted);
-    line-height: 1.45;
-    flex: 1;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .area-pill:active, .area-pill.active {
+    background: var(--green);
+    border-color: var(--green);
+    color: #000;
   }
 
-  .area-row-val strong {
+  /* ===== MAIN CONTENT ===== */
+  #main-content { padding: 0 16px; max-width: 480px; margin: 0 auto; }
+
+  /* ===== AREA SECTIONS ===== */
+  .area-section {
+    margin-bottom: 32px;
+    scroll-margin-top: 72px;
+  }
+  .area-section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 1.5px;
     color: var(--text);
-    font-weight: 600;
-  }
-
-  .area-row-val.undefined {
-    color: var(--dim);
-    font-style: italic;
-  }
-
-  /* proyectos vinculados dentro del área */
-  .linked-projects {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-
-  .linked-proj {
+    margin-bottom: 14px;
     display: flex;
     align-items: center;
-    gap: 7px;
-    font-size: 11.5px;
-    color: var(--muted);
+    gap: 10px;
   }
-
-  .linked-proj-dot {
-    width: 5px; height: 5px;
-    border-radius: 50%;
+  .area-section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .area-icon {
+    width: 20px;
+    height: 20px;
+    color: var(--green);
     flex-shrink: 0;
   }
 
-  /* ── PAUSA BOX ── */
-  .pausa-rule-box {
-    background: var(--surface2);
+  /* ===== COLLABORATOR CARD ===== */
+  .collab-card {
+    background: var(--bg2);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .collab-card:active { border-color: var(--border); }
+  .card-top {
+    padding: 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .card-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: var(--green-dim);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    color: var(--green);
+    letter-spacing: 0.5px;
+  }
+  .card-meta { flex: 1; min-width: 0; }
+  .card-name {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--text);
+    margin-bottom: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .card-role {
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.3px;
+  }
+  .card-expand-btn {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: color 0.2s, transform 0.2s;
+  }
+  .card-expand-btn.open { color: var(--green); }
+  .card-expand-btn svg { transition: transform 0.25s; }
+  .card-expand-btn.open svg { transform: rotate(180deg); }
+
+  .card-body {
+    display: none;
+    padding: 0 16px 16px;
+    animation: slideDown 0.2s ease;
+  }
+  .card-body.open { display: block; }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-divider {
+    height: 1px;
+    background: var(--border-subtle);
+    margin-bottom: 14px;
+  }
+  .tasks-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+  .task-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+  .task-chip {
+    background: var(--bg3);
+    border: 1px solid var(--border-subtle);
+    border-radius: 20px;
+    padding: 5px 11px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .wa-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--green);
+    color: #000;
+    border-radius: 10px;
+    padding: 13px;
+    font-weight: 600;
+    font-size: 14px;
+    width: 100%;
+    transition: background 0.15s, transform 0.1s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .wa-btn:active { background: var(--green-dark); transform: scale(0.98); }
+  .wa-btn svg { flex-shrink: 0; }
+
+  /* ===== FAQ ===== */
+  #faq { padding: 0 16px 32px; max-width: 480px; margin: 0 auto; scroll-margin-top: 72px; }
+  .faq-item {
+    background: var(--bg2);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+  .faq-q {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 16px;
+    cursor: pointer;
+    gap: 10px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .faq-q-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.4;
+  }
+  .faq-arrow {
+    color: var(--text-dim);
+    flex-shrink: 0;
+    transition: transform 0.25s, color 0.2s;
+  }
+  .faq-item.open .faq-arrow { transform: rotate(180deg); color: var(--green); }
+  .faq-body {
+    display: none;
+    padding: 0 16px 16px;
+    animation: slideDown 0.2s ease;
+  }
+  .faq-item.open .faq-body { display: block; }
+  .faq-divider { height: 1px; background: var(--border-subtle); margin-bottom: 12px; }
+  .faq-answer {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+  .faq-responsible {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .faq-name-badge {
+    background: var(--green-dim);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--green);
+  }
+  .faq-wa {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg3);
     border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 16px 20px;
-    margin-bottom: 20px;
+    padding: 7px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    transition: background 0.15s;
   }
+  .faq-wa:active { background: var(--bg4); }
 
-  .pausa-rule-label { font-size: 10px; font-weight: 700; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 7px; }
-
-  .pausa-rule-text { font-size: 13px; color: var(--text); line-height: 1.65; }
-  .pausa-rule-text .sub { display: block; margin-top: 5px; color: var(--muted); font-size: 11.5px; }
-
-  /* ── FOOTER ── */
-  .page-footer {
-    margin-top: 28px;
-    padding-top: 14px;
-    border-top: 1px solid var(--border);
+  /* ===== DEFAULT CONTACT ===== */
+  #default-contact {
+    padding: 0 16px 32px;
+    max-width: 480px;
+    margin: 0 auto;
+    scroll-margin-top: 72px;
+  }
+  .default-box {
+    background: linear-gradient(135deg, var(--bg3) 0%, #161a10 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .default-box::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, var(--green-glow) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .default-box-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    color: var(--green);
+    margin-bottom: 8px;
+  }
+  .default-box-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: var(--text);
+    letter-spacing: 0.5px;
+    line-height: 1.1;
+    margin-bottom: 10px;
+  }
+  .default-box p {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+  .default-wa-btn {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--green);
+    color: #000;
+    border-radius: 10px;
+    padding: 14px;
+    font-weight: 700;
+    font-size: 14px;
+    width: 100%;
+    letter-spacing: 0.2px;
+    transition: background 0.15s;
   }
+  .default-wa-btn:active { background: var(--green-dark); }
 
-  .footer-note { font-size: 11px; color: var(--dim); }
-  .footer-note strong { color: var(--green); }
+  /* ===== DIRECTORY ===== */
+  #directory {
+    padding: 0 16px 32px;
+    max-width: 480px;
+    margin: 0 auto;
+    scroll-margin-top: 72px;
+  }
+  .dir-list { display: flex; flex-direction: column; gap: 8px; }
+  .dir-item {
+    background: var(--bg2);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .dir-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    background: var(--green-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 15px;
+    color: var(--green);
+    flex-shrink: 0;
+  }
+  .dir-info { flex: 1; min-width: 0; }
+  .dir-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+  .dir-area {
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+  .dir-wa {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--green-dim);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    width: 38px;
+    height: 38px;
+    color: var(--green);
+    flex-shrink: 0;
+    transition: background 0.15s;
+  }
+  .dir-wa:active { background: var(--green); color: #000; }
 
-  /* ── VIEWS ── */
-  .view { display: none; }
-  .view.visible { display: block; }
+  /* ===== BOTTOM NAV ===== */
+  #bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: var(--nav-h);
+    background: rgba(10, 10, 10, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border-subtle);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 4px;
+    max-width: 100%;
+  }
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    border-radius: 10px;
+    transition: background 0.15s;
+    flex: 1;
+  }
+  .nav-item:active { background: var(--bg3); }
+  .nav-item svg {
+    width: 22px;
+    height: 22px;
+    color: var(--text-dim);
+    transition: color 0.2s;
+  }
+  .nav-label {
+    font-size: 10px;
+    color: var(--text-dim);
+    font-weight: 500;
+    transition: color 0.2s;
+    letter-spacing: 0.2px;
+  }
+  .nav-item.active svg { color: var(--green); }
+  .nav-item.active .nav-label { color: var(--green); }
+
+  /* ===== PAGE VIEWS ===== */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ===== SECTION SPACERS ===== */
+  .section-spacer { height: 28px; }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="logo">
-    <svg viewBox="0 0 48 56" fill="none">
-      <path d="M24 3L43 15V33L24 45L5 33V15L24 3Z" stroke="#8cb73c" stroke-width="2" fill="none"/>
-      <path d="M24 12L36 20V30L24 38L12 30V20L24 12Z" stroke="#8cb73c" stroke-width="1.5" fill="none" opacity="0.6"/>
-      <path d="M24 20L30 24V30L24 34L18 30V24Z" fill="#8cb73c" opacity="0.25"/>
-      <path d="M16 36L24 46L32 36" stroke="#8cb73c" stroke-width="2" fill="none"/>
-    </svg>
-    <span class="logo-text"><em>LEV</em>ZEN</span>
+<!-- HEADER -->
+<header id="header">
+  <div class="header-inner">
+    <div class="logo-wrap">
+      <!-- Levzen SVG logo icon -->
+      <svg class="logo-icon" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M40 8L52 20L44 28L40 24L36 28L28 20L40 8Z" fill="#7FB239"/>
+        <path d="M28 20L20 28L28 36L36 28L28 20Z" fill="#7FB239" opacity="0.7"/>
+        <path d="M52 20L60 28L52 36L44 28L52 20Z" fill="#7FB239" opacity="0.7"/>
+        <path d="M36 28L28 36L36 44L40 40L44 40L52 36L44 28L40 32L36 28Z" fill="#7FB239" opacity="0.5"/>
+        <path d="M24 44L16 52H32L40 60L48 52H64L56 44H24Z" fill="#7FB239" opacity="0.4"/>
+      </svg>
+      <span class="logo-text">LEVZEN</span>
+    </div>
+    <span class="header-badge">Soporte Interno</span>
   </div>
-  <span class="header-meta">Sistema Operativo · Foco 30 días · Abril 2026</span>
 </header>
 
-<div class="wrap">
+<!-- PAGE: INICIO -->
+<div class="page active" id="page-inicio">
 
-  <div class="page-top">
-    <div class="page-title">Sistema Operativo LEVZEN</div>
-    <div class="page-desc">6 proyectos activos · 6 áreas operativas · Prioridad: flujo y punto de equilibrio</div>
+  <!-- HERO -->
+  <section id="hero">
+    <h1 class="hero-title">Soporte<br><span>Tecnico</span><br>&amp; Atencion</h1>
+    <p class="hero-sub">Encuentra rapidamente a la persona correcta segun tu duda o necesidad.</p>
+
+    <!-- SEARCH -->
+    <div class="search-wrap">
+      <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input type="search" id="search-input" placeholder="Buscar: factura, pedido, envio..." autocomplete="off" />
+      <button id="search-clear" aria-label="Limpiar busqueda">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <!-- SEARCH RESULTS -->
+    <div id="search-results">
+      <div class="section-label">Resultados</div>
+      <div id="search-list"></div>
+      <div id="search-empty" class="hidden">No se encontraron resultados para tu busqueda.</div>
+    </div>
+
+    <!-- AREA PILLS -->
+    <div id="hero-pills-section">
+      <div class="section-label">Areas de soporte</div>
+      <div class="area-pills-wrap">
+        <div class="area-pills" id="area-pills">
+          <button class="area-pill" onclick="scrollToArea('ventas')">Ventas</button>
+          <button class="area-pill" onclick="scrollToArea('inventario')">Inventario</button>
+          <button class="area-pill" onclick="scrollToArea('envios')">Envios</button>
+          <button class="area-pill" onclick="scrollToArea('compras')">Compras</button>
+          <button class="area-pill" onclick="scrollToArea('marketing')">Marketing</button>
+          <button class="area-pill" onclick="scrollToArea('admin')">Administracion</button>
+          <button class="area-pill" onclick="scrollToArea('almacen')">Almacen</button>
+          <button class="area-pill" onclick="scrollToArea('digital')">Digital</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <main id="main-content">
+
+    <!-- VENTAS Y CLIENTES -->
+    <section class="area-section" id="area-ventas">
+      <h2 class="area-section-title">
+        <svg class="area-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Ventas y Clientes
+      </h2>
+      <div id="collab-johan"></div>
+    </section>
+
+    <!-- INVENTARIO -->
+    <section class="area-section" id="area-inventario">
+      <h2 class="area-section-title">
+        <svg class="area-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        Inventario y Precios
+      </h2>
+      <div id="collab-johan-inv"></div>
+    </section>
+
+    <!-- ENVIOS -->
+    <section class="area-section" id="area-envios">
+      <h2 class="area-section-title">
+        <svg class="area-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        Envios y Logistica
+      </h2>
+      <div id="collab-jesus"></div>
+      <div id="collab-alejandro-env"></div>
+    </section>
+
+    <!-- COMPRAS -->
+    <section class="area-section" id="area-compras">
+      <h2 class="area-section-title">
+        <svg class="area-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        Compras
+      </h2>
+      <div id="collab-johan-compras"></div>
+    </section>
+
+    <!-- MARKETING -->
+    <section class="area-section" id="area-marketing">
+      <h2 class="area-section-title">
+        <svg class="area-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        Marketing
+      </h2>
+      <div id="collab-marianne"></div>
+    </section>
+
+    <!-- ADMINISTRACION -->
+    <section class="area-section" id="area-admin">
+      <h2 class="area-section-title">
+        <svg class="area-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        Administracion
+      </h2>
+      <div id="collab-mateo"></div>
+      <div id="collab-david"></div>
+    </section>
+
+    <!-- ALMACEN -->
+    <section class="area-section" id="area-almacen">
+      <h2 class="area-section-title">
+        <svg class="area-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Almacen
+      </h2>
+      <div id="collab-alejandro"></div>
+    </section>
+
+    <!-- DIGITAL -->
+    <section class="area-section" id="area-digital">
+      <h2 class="area-section-title">
+        <svg class="area-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        Soporte Digital
+      </h2>
+      <div id="collab-jesus-dig"></div>
+    </section>
+
+    <!-- DEFAULT CONTACT -->
+    <div id="default-contact">
+      <div class="default-box">
+        <div class="default-box-label">No sabes con quien dirigirte</div>
+        <h3 class="default-box-title">Johan te<br>orientara</h3>
+        <p>Si no estas seguro con quien hablar, comunicate primero con Johan y el canalizara tu caso al area correcta.</p>
+        <a href="https://wa.me/524425442219?text=Hola%20Johan%2C%20tengo%20una%20duda%20y%20no%20se%20con%20quien%20dirigirme.%20%C2%BFMe%20puedes%20apoyar%3F" class="default-wa-btn" target="_blank">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Contactar a Johan
+        </a>
+      </div>
+    </div>
+
+  </main>
+</div><!-- /page-inicio -->
+
+
+<!-- PAGE: AREAS -->
+<div class="page" id="page-areas">
+  <div style="padding: 20px 16px 28px; max-width: 480px; margin: 0 auto;">
+    <div class="section-label">Directorio por area</div>
+    <h2 style="font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:1px;margin-bottom:20px;">Areas de Soporte</h2>
+    <div id="areas-page-content"></div>
   </div>
+</div>
 
-  <div class="tabs">
-    <div class="tab active"  onclick="showView('activos', this)">Activos del mes</div>
-    <div class="tab"         onclick="showView('areas', this)">Áreas</div>
-    <div class="tab"         onclick="showView('responsables', this)">Por responsable</div>
-    <div class="tab"         onclick="showView('pausa', this)">En pausa</div>
-  </div>
 
-  <!-- ══════════════════════════════════════
-       VISTA 1: ACTIVOS DEL MES
-  ══════════════════════════════════════ -->
-  <div id="view-activos" class="view visible">
+<!-- PAGE: FAQ -->
+<div class="page" id="page-faq">
+  <section id="faq" style="padding-top:20px;">
+    <div class="section-label">Guia rapida</div>
+    <h2 style="font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:1px;margin-bottom:20px;">Preguntas<br>Frecuentes</h2>
 
-    <div class="stat-row">
-      <div class="stat">
-        <div class="stat-label">Activos</div>
-        <div class="stat-value">6</div>
-        <div class="stat-sub">máximo permitido: 6</div>
+    <!-- FAQ Items -->
+    <div class="faq-item" id="faq1">
+      <div class="faq-q" onclick="toggleFaq('faq1')">
+        <span class="faq-q-text">Un cliente tiene una queja o problema</span>
+        <svg class="faq-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
-      <div class="stat">
-        <div class="stat-label">Prioridad Alta</div>
-        <div class="stat-value yellow">5</div>
-        <div class="stat-sub">requieren atención esta semana</div>
-      </div>
-      <div class="stat">
-        <div class="stat-label">Impacto Alto en flujo</div>
-        <div class="stat-value">5</div>
-        <div class="stat-sub">directamente ligados a caja</div>
-      </div>
-      <div class="stat">
-        <div class="stat-label">En pausa</div>
-        <div class="stat-value dim">4</div>
-        <div class="stat-sub">no se tocan en 30 días</div>
+      <div class="faq-body">
+        <div class="faq-divider"></div>
+        <p class="faq-answer">Johan se encarga de la resolucion de casos especiales y atencion a clientes. Si recibes una queja o situacion delicada, comunicate directamente con el.</p>
+        <div class="faq-responsible">
+          <span class="faq-name-badge">Johan Martinez</span>
+          <a href="https://wa.me/524425442219?text=Hola%20Johan%2C%20tengo%20una%20duda%20sobre%20soporte.%20%C2%BFMe%20puedes%20apoyar%3F" class="faq-wa" target="_blank">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            WhatsApp
+          </a>
+        </div>
       </div>
     </div>
 
-    <div class="table-box">
-      <div class="table-head-bar">
-        <span class="table-head-title">Proyectos activos</span>
-        <span class="table-count">6 / 6</span>
+    <div class="faq-item" id="faq2">
+      <div class="faq-q" onclick="toggleFaq('faq2')">
+        <span class="faq-q-text">Necesito una factura</span>
+        <svg class="faq-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Proyecto</th>
-            <th>Área</th>
-            <th>Prioridad</th>
-            <th>Impacto</th>
-            <th>Paulo hace</th>
-            <th>Equipo hace</th>
-            <th>Siguiente acción</th>
-            <th>Fecha</th>
-          </tr>
-        </thead>
-        <tbody>
-
-          <tr>
-            <td>
-              <div class="pname">Sistema comercial WhatsApp + leads</div>
-              <span class="b b-activo">Activo</span>
-            </td>
-            <td><span class="area-chip ac-a1"><span class="dot" style="background:var(--a1)"></span>Ventas</span></td>
-            <td><span class="b b-alta">Alta</span></td>
-            <td><span class="b b-i-alto">Alto</span></td>
-            <td>
-              <div class="resp-block"><div class="resp-row">
-                <span class="resp-tag resp-paulo">Paulo</span>
-                <span class="resp-txt">Define mensajes, criterio y flujo</span>
-              </div></div>
-            </td>
-            <td>
-              <div class="resp-block"><div class="resp-row">
-                <span class="resp-tag resp-equipo">Equipo</span>
-                <span class="resp-txt">Ejecuta seguimiento y primera respuesta</span>
-              </div></div>
-            </td>
-            <td><span class="sig-acc urgent">Definir mensajes de primer contacto</span></td>
-            <td><span class="fecha hot">14 abr</span></td>
-          </tr>
-
-          <tr>
-            <td>
-              <div class="pname">Cobranza activa + recuperación de cartera</div>
-              <span class="b b-activo">Activo</span>
-            </td>
-            <td><span class="area-chip ac-a2"><span class="dot" style="background:var(--a2)"></span>Cobranza</span></td>
-            <td><span class="b b-alta">Alta</span></td>
-            <td><span class="b b-i-alto">Alto</span></td>
-            <td>
-              <div class="resp-block"><div class="resp-row">
-                <span class="resp-tag resp-paulo">Paulo</span>
-                <span class="resp-txt">Valida casos difíciles y negocia</span>
-              </div></div>
-            </td>
-            <td>
-              <div class="resp-block"><div class="resp-row">
-                <span class="resp-tag resp-equipo">Equipo</span>
-                <span class="resp-txt">Lista cuentas vencidas y primer contacto</span>
-              </div></div>
-            </td>
-            <td><span class="sig-acc urgent">Listar cuentas vencidas +30 días hoy</span></td>
-            <td><span class="fecha hot">11 abr</span></td>
-          </tr>
-
-          <tr>
-            <td>
-              <div class="pname">Reactivación de clientes dormidos</div>
-              <span class="b b-activo">Activo</span>
-            </td>
-            <td><span class="area-chip ac-a1"><span class="dot" style="background:var(--a1)"></span>Ventas</span></td>
-            <td><span class="b b-alta">Alta</span></td>
-            <td><span class="b b-i-alto">Alto</span></td>
-            <td>
-              <div class="resp-block"><div class="resp-row">
-                <span class="resp-tag resp-paulo">Paulo</span>
-                <span class="resp-txt">Criterio de selección y aprueba mensaje</span>
-              </div></div>
-            </td>
-            <td>
-              <div class="resp-block"><div class="resp-row">
-                <span class="resp-tag resp-equipo">Equipo</span>
-                <span class="resp-txt">Ejecuta contacto y lleva registro</span>
-              </div></div>
-            </td>
-            <td><span class="sig-acc">Identificar clientes sin compra en 60+ días</span></td>
-            <td><span class="fecha">18 abr</span></td>
-          </tr>
-
-          <tr>
-            <td>
-              <div class="pname">Catálogo y precios confiables en Odoo / web</div>
-              <span class="b b-activo">Activo</span>
-            </td>
-            <td><span class="area-chip ac-a4"><span class="dot" style="background:var(--a4)"></span>Catálogo</span></td>
-            <td><span class="b b-alta">Alta</span></td>
-            <td><span class="b b-i-alto">Alto</span></td>
-            <td>
-              <div class="resp-block"><div class="resp-row">
-                <span class="resp-tag resp-paulo">Paulo</span>
-                <span class="resp-txt">Valida precios y autoriza cambios de margen</span>
-              </div></div>
-            </td>
-            <td>
-              <div class="resp-block"><div class="resp-row">
-                <span class="resp-tag resp-equipo">Equipo</span>
-                <span class="resp-txt">Actualiza Odoo y verifica publicación</span>
-              </div></div>
-            </td>
-            <td><span class="sig-acc">Validar precios publicados vs precios reales</span></td>
-            <td><span class="fecha">18 abr</span></td>
-          </tr>
-
-          <tr>
-            <td>
-              <div class="pname">Inventario confiable + productos estancados</div>
-              <span class="b b-activo">Activo</span>
-            </td>
-            <td><span class="area-chip ac-a3"><span class="dot" style="background:var(--a3)"></span>Operación</span></td>
-            <td><span class="b b-media">Media</span></td>
-            <td><span class="b b-i-medio">Medio</span></td>
-            <td>
-              <div class="resp-block"><div class="resp-row">
-                <span class="resp-tag resp-paulo">Paulo</span>
-                <span class="resp-txt">Decide: descuento, mover o liquidar</span>
-              </div></div>
-            </td>
-            <td>
-              <div class="resp-block"><div class="resp-row">
-                <span class="resp-tag resp-equipo">Equipo</span>
-                <span class="resp-txt">Levanta inventario y reporte de sin movimiento</span>
-              </div></div>
-            </td>
-            <td><span class="sig-acc">Reporte de productos sin movimiento 60+ días</span></td>
-            <td><span class="fecha">21 abr</span></td>
-          </tr>
-
-          <tr>
-            <td>
-              <div class="pname">Contenido comercial de conversión</div>
-              <span class="b b-activo">Activo</span>
-            </td>
-            <td><span class="area-chip ac-a5"><span class="dot" style="background:var(--a5)"></span>Marketing</span></td>
-            <td><span class="b b-alta">Alta</span></td>
-            <td><span class="b b-i-alto">Alto</span></td>
-            <td>
-              <div class="resp-block"><div class="resp-row">
-                <span class="resp-tag resp-paulo">Paulo</span>
-                <span class="resp-txt">Define temas y criterio comercial semanal</span>
-              </div></div>
-            </td>
-            <td>
-              <div class="resp-block"><div class="resp-row">
-                <span class="resp-tag resp-equipo">Equipo</span>
-                <span class="resp-txt">Produce, edita y publica</span>
-              </div></div>
-            </td>
-            <td><span class="sig-acc">3 temas esta semana con intención de venta</span></td>
-            <td><span class="fecha hot">14 abr</span></td>
-          </tr>
-
-        </tbody>
-      </table>
-    </div>
-
-    <div class="page-footer">
-      <span class="footer-note">Regla: si no impacta flujo en <strong>30 días</strong> → no está activo</span>
-      <span class="footer-note">Mockup visual · No sustituye Notion</span>
-    </div>
-  </div>
-
-  <!-- ══════════════════════════════════════
-       VISTA 2: ÁREAS
-  ══════════════════════════════════════ -->
-  <div id="view-areas" class="view">
-
-    <div class="stat-row">
-      <div class="stat">
-        <div class="stat-label">Áreas operativas</div>
-        <div class="stat-value">6</div>
-        <div class="stat-sub">mapeadas y con dueño</div>
-      </div>
-      <div class="stat">
-        <div class="stat-label">Carga Alta</div>
-        <div class="stat-value yellow">3</div>
-        <div class="stat-sub">áreas bajo presión esta semana</div>
-      </div>
-      <div class="stat">
-        <div class="stat-label">Carga Media</div>
-        <div class="stat-value" style="color:#c89020">2</div>
-        <div class="stat-sub">activas pero manejables</div>
-      </div>
-      <div class="stat">
-        <div class="stat-label">Ejecutor por definir</div>
-        <div class="stat-value dim">2</div>
-        <div class="stat-sub">áreas sin ejecutor confirmado</div>
+      <div class="faq-body">
+        <div class="faq-divider"></div>
+        <p class="faq-answer">David Nieto es el responsable de facturacion. Contactalo directamente con los datos de la empresa o cliente.</p>
+        <div class="faq-responsible">
+          <span class="faq-name-badge">David Nieto</span>
+          <a href="https://wa.me/524425442219?text=Hola%20David%2C%20tengo%20una%20duda%20sobre%20soporte.%20%C2%BFMe%20puedes%20apoyar%3F" class="faq-wa" target="_blank" id="faq2-wa">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            WhatsApp
+          </a>
+        </div>
       </div>
     </div>
 
-    <div class="areas-grid">
-
-      <!-- ÁREA 1: VENTAS -->
-      <div class="area-card">
-        <div class="area-card-header">
-          <div class="area-card-title-wrap">
-            <div class="area-accent" style="background:var(--a1)"></div>
-            <div>
-              <div class="area-card-name">Ventas / Comercial</div>
-              <div class="area-card-obj">Generar leads, activar clientes y cerrar pedidos mayoreo</div>
-            </div>
-          </div>
-          <span class="carga carga-alta">Carga Alta</span>
-        </div>
-        <div class="area-card-body">
-          <div class="area-row">
-            <span class="area-row-label">Líder</span>
-            <span class="area-row-val"><strong>Paulo</strong> — dirección y criterio comercial</span>
-          </div>
-          <div class="area-row">
-            <span class="area-row-label">Ejecutor</span>
-            <span class="area-row-val undefined">Equipo comercial — por confirmar / asignar</span>
-          </div>
-          <div class="area-row">
-            <span class="area-row-label">Proyectos</span>
-            <div class="linked-projects">
-              <div class="linked-proj">
-                <span class="linked-proj-dot" style="background:var(--a1)"></span>
-                Sistema comercial WhatsApp + leads
-              </div>
-              <div class="linked-proj">
-                <span class="linked-proj-dot" style="background:var(--a1)"></span>
-                Reactivación de clientes dormidos
-              </div>
-            </div>
-          </div>
+    <div class="faq-item" id="faq3">
+      <div class="faq-q" onclick="toggleFaq('faq3')">
+        <span class="faq-q-text">Hay un problema con un pedido</span>
+        <svg class="faq-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="faq-body">
+        <div class="faq-divider"></div>
+        <p class="faq-answer">Si el problema es con la entrega o el cliente, contacta a Johan. Si el problema es de recepcion o cambio en almacen, contacta a Alejandro.</p>
+        <div class="faq-responsible">
+          <span class="faq-name-badge">Johan o Alejandro</span>
+          <a href="https://wa.me/524425442219?text=Hola%2C%20tengo%20una%20duda%20sobre%20soporte.%20%C2%BFMe%20puedes%20apoyar%3F" class="faq-wa" target="_blank">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            WhatsApp
+          </a>
         </div>
       </div>
+    </div>
 
-      <!-- ÁREA 2: COBRANZA -->
-      <div class="area-card">
-        <div class="area-card-header">
-          <div class="area-card-title-wrap">
-            <div class="area-accent" style="background:var(--a2)"></div>
-            <div>
-              <div class="area-card-name">Cobranza / Finanzas comerciales</div>
-              <div class="area-card-obj">Recuperar cartera vencida y mantener flujo de caja sano</div>
-            </div>
-          </div>
-          <span class="carga carga-alta">Carga Alta</span>
-        </div>
-        <div class="area-card-body">
-          <div class="area-row">
-            <span class="area-row-label">Líder</span>
-            <span class="area-row-val"><strong>Paulo</strong> — valida y negocia casos complejos</span>
-          </div>
-          <div class="area-row">
-            <span class="area-row-label">Ejecutor</span>
-            <span class="area-row-val undefined">Administración — por confirmar quién opera</span>
-          </div>
-          <div class="area-row">
-            <span class="area-row-label">Proyectos</span>
-            <div class="linked-projects">
-              <div class="linked-proj">
-                <span class="linked-proj-dot" style="background:var(--a2)"></span>
-                Cobranza activa + recuperación de cartera
-              </div>
-            </div>
-          </div>
+    <div class="faq-item" id="faq4">
+      <div class="faq-q" onclick="toggleFaq('faq4')">
+        <span class="faq-q-text">Necesito saber sobre mi pago o nomina</span>
+        <svg class="faq-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="faq-body">
+        <div class="faq-divider"></div>
+        <p class="faq-answer">Mateo elabora la nomina y gestiona el registro de pagos. Cualquier duda sobre pagos, dirigete a el.</p>
+        <div class="faq-responsible">
+          <span class="faq-name-badge">Mateo Contreras</span>
+          <a href="https://wa.me/5256441852476?text=Hola%20Mateo%2C%20tengo%20una%20duda%20sobre%20soporte.%20%C2%BFMe%20puedes%20apoyar%3F" class="faq-wa" target="_blank" id="faq4-wa">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            WhatsApp
+          </a>
         </div>
       </div>
+    </div>
 
-      <!-- ÁREA 3: OPERACIÓN -->
-      <div class="area-card">
-        <div class="area-card-header">
-          <div class="area-card-title-wrap">
-            <div class="area-accent" style="background:var(--a3)"></div>
-            <div>
-              <div class="area-card-name">Operación / Inventario</div>
-              <div class="area-card-obj">Mantener inventario confiable y detectar producto sin rotación</div>
-            </div>
-          </div>
-          <span class="carga carga-media">Carga Media</span>
-        </div>
-        <div class="area-card-body">
-          <div class="area-row">
-            <span class="area-row-label">Líder</span>
-            <span class="area-row-val"><strong>Paulo</strong> — decide qué hacer con cada producto</span>
-          </div>
-          <div class="area-row">
-            <span class="area-row-label">Ejecutor</span>
-            <span class="area-row-val"><strong>Operación / Almacén</strong> — levantamiento y reporte</span>
-          </div>
-          <div class="area-row">
-            <span class="area-row-label">Proyectos</span>
-            <div class="linked-projects">
-              <div class="linked-proj">
-                <span class="linked-proj-dot" style="background:var(--a3)"></span>
-                Inventario confiable + productos estancados
-              </div>
-            </div>
-          </div>
+    <div class="faq-item" id="faq5">
+      <div class="faq-q" onclick="toggleFaq('faq5')">
+        <span class="faq-q-text">Necesito enviar o rastrear un pedido</span>
+        <svg class="faq-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="faq-body">
+        <div class="faq-divider"></div>
+        <p class="faq-answer">Jesus Chavez se encarga de la generacion de guias y gestion de envios. Contactalo para rastreos o guias de pedido.</p>
+        <div class="faq-responsible">
+          <span class="faq-name-badge">Jesus Chavez</span>
+          <a href="https://wa.me/524421155401?text=Hola%20Jesus%2C%20tengo%20una%20duda%20sobre%20soporte.%20%C2%BFMe%20puedes%20apoyar%3F" class="faq-wa" target="_blank">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            WhatsApp
+          </a>
         </div>
       </div>
+    </div>
 
-      <!-- ÁREA 4: CATÁLOGO -->
-      <div class="area-card">
-        <div class="area-card-header">
-          <div class="area-card-title-wrap">
-            <div class="area-accent" style="background:var(--a4)"></div>
-            <div>
-              <div class="area-card-name">Catálogo / Producto / Odoo</div>
-              <div class="area-card-obj">Tener precios confiables y catálogo funcional en Odoo y web</div>
-            </div>
-          </div>
-          <span class="carga carga-alta">Carga Alta</span>
-        </div>
-        <div class="area-card-body">
-          <div class="area-row">
-            <span class="area-row-label">Líder</span>
-            <span class="area-row-val"><strong>Paulo</strong> — valida precios y autoriza cambios</span>
-          </div>
-          <div class="area-row">
-            <span class="area-row-label">Ejecutor</span>
-            <span class="area-row-val"><strong>Soporte Odoo / equipo interno</strong> — actualiza y verifica</span>
-          </div>
-          <div class="area-row">
-            <span class="area-row-label">Proyectos</span>
-            <div class="linked-projects">
-              <div class="linked-proj">
-                <span class="linked-proj-dot" style="background:var(--a4)"></span>
-                Catálogo y precios confiables en Odoo / web
-              </div>
-            </div>
-          </div>
+    <div class="faq-item" id="faq6">
+      <div class="faq-q" onclick="toggleFaq('faq6')">
+        <span class="faq-q-text">Tengo una duda sobre inventario o precio</span>
+        <svg class="faq-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="faq-body">
+        <div class="faq-divider"></div>
+        <p class="faq-answer">Johan lleva el orden y control de productos disponibles y agotados. Tambien gestiona la actualizacion de precios generales.</p>
+        <div class="faq-responsible">
+          <span class="faq-name-badge">Johan Martinez</span>
+          <a href="https://wa.me/524425442219?text=Hola%20Johan%2C%20tengo%20una%20duda%20sobre%20soporte.%20%C2%BFMe%20puedes%20apoyar%3F" class="faq-wa" target="_blank">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            WhatsApp
+          </a>
         </div>
       </div>
+    </div>
 
-      <!-- ÁREA 5: MARKETING -->
-      <div class="area-card">
-        <div class="area-card-header">
-          <div class="area-card-title-wrap">
-            <div class="area-accent" style="background:var(--a5)"></div>
-            <div>
-              <div class="area-card-name">Marketing / Contenido comercial</div>
-              <div class="area-card-obj">Atraer leads mayoristas y generar autoridad de marca con criterio comercial</div>
-            </div>
-          </div>
-          <span class="carga carga-media">Carga Media</span>
-        </div>
-        <div class="area-card-body">
-          <div class="area-row">
-            <span class="area-row-label">Líder</span>
-            <span class="area-row-val"><strong>Paulo</strong> — define temas, criterio y dirección de contenido</span>
-          </div>
-          <div class="area-row">
-            <span class="area-row-label">Ejecutor</span>
-            <span class="area-row-val undefined">Corba / contenido — pendiente confirmar disponibilidad</span>
-          </div>
-          <div class="area-row">
-            <span class="area-row-label">Proyectos</span>
-            <div class="linked-projects">
-              <div class="linked-proj">
-                <span class="linked-proj-dot" style="background:var(--a5)"></span>
-                Contenido comercial de conversión
-              </div>
-            </div>
-          </div>
+    <div class="faq-item" id="faq7">
+      <div class="faq-q" onclick="toggleFaq('faq7')">
+        <span class="faq-q-text">Necesito material o info para apoyar una venta</span>
+        <svg class="faq-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="faq-body">
+        <div class="faq-divider"></div>
+        <p class="faq-answer">Johan tiene mayor nocion de los productos. Marianne puede apoyar con materiales de marketing si se requieren.</p>
+        <div class="faq-responsible">
+          <span class="faq-name-badge">Johan o Marianne</span>
+          <a href="https://wa.me/524425442219?text=Hola%20Johan%2C%20tengo%20una%20duda%20sobre%20soporte.%20%C2%BFMe%20puedes%20apoyar%3F" class="faq-wa" target="_blank">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            WhatsApp
+          </a>
         </div>
       </div>
+    </div>
 
-      <!-- ÁREA 6: DIRECCIÓN -->
-      <div class="area-card">
-        <div class="area-card-header">
-          <div class="area-card-title-wrap">
-            <div class="area-accent" style="background:var(--a6)"></div>
-            <div>
-              <div class="area-card-name">Dirección / Prioridades</div>
-              <div class="area-card-obj">Mantener el sistema enfocado, decidir qué avanza y qué espera</div>
-            </div>
-          </div>
-          <span class="carga carga-baja">Carga Baja</span>
-        </div>
-        <div class="area-card-body">
-          <div class="area-row">
-            <span class="area-row-label">Líder</span>
-            <span class="area-row-val"><strong>Paulo</strong> — único responsable de este nivel</span>
-          </div>
-          <div class="area-row">
-            <span class="area-row-label">Ejecutor</span>
-            <span class="area-row-val" style="color:var(--muted);">No aplica — es nivel de decisión, no operación</span>
-          </div>
-          <div class="area-row">
-            <span class="area-row-label">Función</span>
-            <span class="area-row-val" style="color:var(--muted);">Revisar estado del sistema cada semana · Ajustar prioridades · Activar o pausar proyectos · Desbloquear al equipo cuando sea necesario</span>
-          </div>
+    <div class="faq-item" id="faq8">
+      <div class="faq-q" onclick="toggleFaq('faq8')">
+        <span class="faq-q-text">Necesito acceso o apoyo con la plataforma digital</span>
+        <svg class="faq-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="faq-body">
+        <div class="faq-divider"></div>
+        <p class="faq-answer">David Nieto gestiona los accesos a la pagina y el soporte administrativo digital. Jesus Chavez apoya con guias y envios en plataforma.</p>
+        <div class="faq-responsible">
+          <span class="faq-name-badge">David Nieto</span>
+          <a href="https://wa.me/525613258633?text=Hola%20David%2C%20tengo%20una%20duda%20sobre%20soporte.%20%C2%BFMe%20puedes%20apoyar%3F" class="faq-wa" target="_blank">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            WhatsApp
+          </a>
         </div>
       </div>
+    </div>
 
-    </div><!-- /areas-grid -->
+  </section>
+</div><!-- /page-faq -->
 
-    <div class="page-footer">
-      <span class="footer-note">Las áreas son la estructura real del negocio, no un organigrama</span>
-      <span class="footer-note">Mockup visual · No sustituye Notion</span>
+
+<!-- PAGE: CONTACTOS (DIRECTORY) -->
+<div class="page" id="page-contactos">
+  <section id="directory" style="padding-top:20px;">
+    <div class="section-label">Todos los colaboradores</div>
+    <h2 style="font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:1px;margin-bottom:20px;">Directorio<br>Rapido</h2>
+    <div class="dir-list" id="dir-list"></div>
+  </section>
+</div>
+
+
+<!-- PAGE: AYUDA -->
+<div class="page" id="page-ayuda">
+  <div style="padding: 20px 16px; max-width: 480px; margin: 0 auto;">
+    <div class="section-label">Centro de ayuda</div>
+    <h2 style="font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:1px;margin-bottom:20px;">Ayuda</h2>
+
+    <div style="background:var(--bg2);border:1px solid var(--border-subtle);border-radius:var(--radius);padding:18px;margin-bottom:12px;">
+      <div style="font-size:12px;font-weight:600;letter-spacing:1px;color:var(--green);text-transform:uppercase;margin-bottom:6px;">Como usar esta guia</div>
+      <p style="font-size:13px;color:var(--text-muted);line-height:1.7;">Busca tu duda en el buscador o navega por area. Cada colaborador tiene un boton de WhatsApp para contactarlo directamente con un mensaje preestablecido.</p>
+    </div>
+
+    <div style="background:var(--bg2);border:1px solid var(--border-subtle);border-radius:var(--radius);padding:18px;margin-bottom:12px;">
+      <div style="font-size:12px;font-weight:600;letter-spacing:1px;color:var(--green);text-transform:uppercase;margin-bottom:6px;">Si no sabes con quien hablar</div>
+      <p style="font-size:13px;color:var(--text-muted);line-height:1.7;margin-bottom:14px;">Primero contacta a Johan Martinez. El orientara tu caso y te dirigira con la persona correcta.</p>
+      <a href="https://wa.me/524425442219?text=Hola%20Johan%2C%20tengo%20una%20duda%20y%20no%20se%20con%20quien%20dirigirme.%20%C2%BFMe%20puedes%20apoyar%3F" class="wa-btn" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Contactar a Johan
+      </a>
+    </div>
+
+    <div style="background:var(--bg2);border:1px solid var(--border-subtle);border-radius:var(--radius);padding:18px;margin-bottom:12px;">
+      <div style="font-size:12px;font-weight:600;letter-spacing:1px;color:var(--green);text-transform:uppercase;margin-bottom:6px;">Recordatorio</div>
+      <p style="font-size:13px;color:var(--text-muted);line-height:1.7;">Esta herramienta es de uso interno del equipo comercial de Levzen. La informacion de contacto es confidencial.</p>
+    </div>
+
+    <div style="text-align:center;margin-top:28px;">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:3px;color:var(--green);margin-bottom:4px;">LEVZEN</div>
+      <div style="font-size:11px;color:var(--text-dim);letter-spacing:1px;">Soporte Interno — Uso exclusivo del equipo</div>
     </div>
   </div>
+</div>
 
-  <!-- ══════════════════════════════════════
-       VISTA 3: POR RESPONSABLE
-  ══════════════════════════════════════ -->
-  <div id="view-responsables" class="view">
 
-    <div class="stat-row">
-      <div class="stat">
-        <div class="stat-label">Paulo — Rol</div>
-        <div class="stat-value" style="font-size:15px;padding-top:6px;color:var(--green);">Dirección</div>
-        <div class="stat-sub">Decide · valida · da criterio · no ejecuta</div>
-      </div>
-      <div class="stat">
-        <div class="stat-label">Equipo — Rol</div>
-        <div class="stat-value blue" style="font-size:15px;padding-top:6px;">Ejecución</div>
-        <div class="stat-sub">Opera · actualiza · contacta · produce</div>
-      </div>
-      <div class="stat">
-        <div class="stat-label">Proyectos donde Paulo decide</div>
-        <div class="stat-value">6</div>
-        <div class="stat-sub">solo en decisiones, no operación</div>
-      </div>
-      <div class="stat">
-        <div class="stat-label">Proyectos que equipo mueve solo</div>
-        <div class="stat-value blue">6</div>
-        <div class="stat-sub">sin esperar a Paulo para arrancar</div>
-      </div>
-    </div>
+<!-- BOTTOM NAV -->
+<nav id="bottom-nav" role="navigation" aria-label="Navegacion principal">
+  <button class="nav-item active" id="nav-inicio" onclick="switchPage('inicio')" aria-label="Inicio">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span class="nav-label">Inicio</span>
+  </button>
+  <button class="nav-item" id="nav-areas" onclick="switchPage('areas')" aria-label="Areas">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+    <span class="nav-label">Areas</span>
+  </button>
+  <button class="nav-item" id="nav-faq" onclick="switchPage('faq')" aria-label="FAQ">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <span class="nav-label">FAQ</span>
+  </button>
+  <button class="nav-item" id="nav-contactos" onclick="switchPage('contactos')" aria-label="Contactos">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    <span class="nav-label">Contactos</span>
+  </button>
+  <button class="nav-item" id="nav-ayuda" onclick="switchPage('ayuda')" aria-label="Ayuda">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <span class="nav-label">Ayuda</span>
+  </button>
+</nav>
 
-    <div class="table-box">
-      <div class="table-head-bar">
-        <span class="table-head-title">División de roles por proyecto</span>
-        <span class="table-count">6 proyectos</span>
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Proyecto</th>
-            <th>Área</th>
-            <th>Paulo hace (dirección)</th>
-            <th>Equipo hace (ejecución)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><div class="pname">Sistema comercial WhatsApp + leads</div></td>
-            <td><span class="area-chip ac-a1"><span class="dot" style="background:var(--a1)"></span>Ventas</span></td>
-            <td><span class="resp-txt">Define mensajes, aprueba flujo y criterio de calificación</span></td>
-            <td><span class="resp-txt">Responde, hace seguimiento diario, registra estado de cada lead</span></td>
-          </tr>
-          <tr>
-            <td><div class="pname">Cobranza activa + recuperación de cartera</div></td>
-            <td><span class="area-chip ac-a2"><span class="dot" style="background:var(--a2)"></span>Cobranza</span></td>
-            <td><span class="resp-txt">Valida cuentas prioritarias y negocia casos complejos</span></td>
-            <td><span class="resp-txt">Genera lista de vencidos, primer contacto y lleva registro</span></td>
-          </tr>
-          <tr>
-            <td><div class="pname">Reactivación de clientes dormidos</div></td>
-            <td><span class="area-chip ac-a1"><span class="dot" style="background:var(--a1)"></span>Ventas</span></td>
-            <td><span class="resp-txt">Define criterio de selección y aprueba mensaje de reactivación</span></td>
-            <td><span class="resp-txt">Identifica clientes, ejecuta contacto y registra respuestas</span></td>
-          </tr>
-          <tr>
-            <td><div class="pname">Catálogo y precios confiables</div></td>
-            <td><span class="area-chip ac-a4"><span class="dot" style="background:var(--a4)"></span>Catálogo</span></td>
-            <td><span class="resp-txt">Valida precios finales y autoriza cambios que afecten margen</span></td>
-            <td><span class="resp-txt">Actualiza productos en Odoo y verifica que se publiquen correctos</span></td>
-          </tr>
-          <tr>
-            <td><div class="pname">Inventario + productos estancados</div></td>
-            <td><span class="area-chip ac-a3"><span class="dot" style="background:var(--a3)"></span>Operación</span></td>
-            <td><span class="resp-txt">Decide qué hacer con producto estancado: descuento, mover o liquidar</span></td>
-            <td><span class="resp-txt">Hace levantamiento físico y genera reporte de sin movimiento</span></td>
-          </tr>
-          <tr>
-            <td><div class="pname">Contenido comercial de conversión</div></td>
-            <td><span class="area-chip ac-a5"><span class="dot" style="background:var(--a5)"></span>Marketing</span></td>
-            <td><span class="resp-txt">Define temas de la semana con criterio de venta o autoridad</span></td>
-            <td><span class="resp-txt">Produce, edita y publica en tiempo y forma</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="page-footer">
-      <span class="footer-note">Si algo necesita a Paulo para moverse operativamente → hay un problema de proceso</span>
-      <span class="footer-note">Mockup visual · No sustituye Notion</span>
-    </div>
-  </div>
-
-  <!-- ══════════════════════════════════════
-       VISTA 4: EN PAUSA
-  ══════════════════════════════════════ -->
-  <div id="view-pausa" class="view">
-
-    <div class="pausa-rule-box">
-      <div class="pausa-rule-label">Regla de pausa</div>
-      <div class="pausa-rule-text">
-        Lo que está en pausa <strong>no se toca en 30 días.</strong> No genera tareas. No consume energía. No se revisa hasta que los 6 activos estén bien ejecutados.
-        <span class="sub">Para activar algo de aquí, primero hay que cerrar o bajar a pausa uno de los proyectos activos.</span>
-      </div>
-    </div>
-
-    <div class="table-box">
-      <div class="table-head-bar">
-        <span class="table-head-title">Proyectos en pausa</span>
-        <span class="table-count gray">4</span>
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Proyecto</th>
-            <th>Área</th>
-            <th>Por qué está en pausa</th>
-            <th>Cuándo retomar</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <div class="pname" style="color:var(--muted);">Experiencia comercial en web y catálogo</div>
-              <span class="b b-pausa">En pausa</span>
-            </td>
-            <td><span class="area-chip ac-a4" style="opacity:.5"><span class="dot" style="background:var(--a4)"></span>Catálogo</span></td>
-            <td><span style="font-size:12px;color:var(--dim);">No tiene sentido mejorar UX si los precios y catálogo no están estables primero</span></td>
-            <td><span style="font-size:11.5px;color:var(--dim);">Cuando catálogo esté validado y funcional</span></td>
-          </tr>
-          <tr>
-            <td>
-              <div class="pname" style="color:var(--muted);">Proceso de compras por rotación y reposición</div>
-              <span class="b b-pausa">En pausa</span>
-            </td>
-            <td><span class="area-chip ac-a3" style="opacity:.5"><span class="dot" style="background:var(--a3)"></span>Operación</span></td>
-            <td><span style="font-size:12px;color:var(--dim);">Requiere inventario confiable primero. Sin eso el proceso no tiene base</span></td>
-            <td><span style="font-size:11.5px;color:var(--dim);">Cuando inventario esté levantado y confiable</span></td>
-          </tr>
-          <tr>
-            <td>
-              <div class="pname" style="color:var(--muted);">Pendientes Odoo no críticos</div>
-              <span class="b b-pausa">En pausa</span>
-            </td>
-            <td><span class="area-chip ac-a4" style="opacity:.5"><span class="dot" style="background:var(--a4)"></span>Catálogo</span></td>
-            <td><span style="font-size:12px;color:var(--dim);">Solo se atienden si bloquean una venta o proceso activo. El resto espera</span></td>
-            <td><span style="font-size:11.5px;color:var(--dim);">Solo si es bloqueante de venta o cobro</span></td>
-          </tr>
-          <tr>
-            <td>
-              <div class="pname" style="color:var(--muted);">Estructura interna y responsables</div>
-              <span class="b b-pausa">En pausa</span>
-            </td>
-            <td><span style="font-size:11.5px;color:var(--dim);">—</span></td>
-            <td><span style="font-size:12px;color:var(--dim);">No es prioridad cuando el foco es flujo. Se retoma cuando haya estabilidad operativa</span></td>
-            <td><span style="font-size:11.5px;color:var(--dim);">Mayo o cuando el equipo opere con más orden</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="page-footer">
-      <span class="footer-note">4 en pausa · No generan carga · No se revisan hasta que los activos estén bien</span>
-      <span class="footer-note">Mockup visual · No sustituye Notion</span>
-    </div>
-  </div>
-
-</div><!-- /wrap -->
 
 <script>
-  function showView(name, el) {
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('visible'));
-    document.getElementById('view-' + name).classList.add('visible');
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    el.classList.add('active');
+/* ===== DATA ===== */
+const collaborators = [
+  {
+    id: 'jesus',
+    name: 'Jesus Chavez',
+    initials: 'JC',
+    role: 'Logistica y Digital',
+    phone: '524421155401',
+    phoneDisplay: '+52 442 115 5401',
+    areas: ['Envios y Logistica', 'Soporte Digital'],
+    tasks: [
+      'Guias de pedidos',
+      'Envios y zonas extendidas',
+      'Productos nuevos',
+      'Generacion de guias',
+      'Gestion de envios',
+      'Apoyo en logistica'
+    ]
+  },
+  {
+    id: 'johan',
+    name: 'Johan Martinez',
+    initials: 'JM',
+    role: 'Ventas, Inventario y Compras',
+    phone: '524425442219',
+    phoneDisplay: '+52 442 544 2219',
+    areas: ['Ventas y Clientes', 'Inventario y Precios', 'Compras'],
+    tasks: [
+      'Dudas sobre productos',
+      'Atencion a clientes',
+      'Inventario disponible',
+      'Problema con entrega',
+      'Resurtido de mercancia',
+      'Resolucion de casos especiales',
+      'Apoyo general a vendedores',
+      'Control de productos agotados',
+      'Actualizacion de precios'
+    ]
+  },
+  {
+    id: 'mateo',
+    name: 'Mateo Contreras',
+    initials: 'MC',
+    role: 'Administracion y Finanzas',
+    phone: '525644185247',
+    phoneDisplay: '+52 56 4418 5247',
+    areas: ['Administracion'],
+    tasks: [
+      'Clientes por pagar',
+      'Nominas a vendedores',
+      'Registro de pagos',
+      'Envio de pedidos y notas',
+      'Revision de cotizaciones'
+    ]
+  },
+  {
+    id: 'marianne',
+    name: 'Marianne Sandoval',
+    initials: 'MS',
+    role: 'Marketing y Promociones',
+    phone: '525585832641',
+    phoneDisplay: '+52 55 8583 2641',
+    areas: ['Marketing'],
+    tasks: [
+      'Incentivos y ventas',
+      'Promociones',
+      'Campanas',
+      'Comunicacion de avisos',
+      'Marketing'
+    ]
+  },
+  {
+    id: 'david',
+    name: 'David Nieto',
+    initials: 'DN',
+    role: 'Facturacion y Accesos',
+    phone: '525613258633',
+    phoneDisplay: '+52 56 1325 8633',
+    areas: ['Administracion', 'Soporte Digital'],
+    tasks: [
+      'Facturacion',
+      'Accesos a la pagina',
+      'Soporte administrativo'
+    ]
+  },
+  {
+    id: 'alejandro',
+    name: 'Alejandro Hernandez',
+    initials: 'AH',
+    role: 'Jefe de Almacen',
+    phone: '524461222565',
+    phoneDisplay: '+52 446 122 2565',
+    areas: ['Almacen', 'Envios y Logistica'],
+    tasks: [
+      'Cambios de mercancia',
+      'Sustituciones',
+      'Citas con clientes',
+      'Recepcion de mercancia',
+      'Seguimiento de pedidos',
+      'Supervision de almacen'
+    ]
   }
-</script>
+];
 
+/* Search index */
+const searchIndex = [];
+collaborators.forEach(c => {
+  c.tasks.forEach(t => {
+    searchIndex.push({ name: c.name, task: t, phone: c.phone });
+  });
+});
+
+/* ===== BUILD CARD HTML ===== */
+function buildCard(collab, instanceSuffix) {
+  const cardId = `card-${collab.id}-${instanceSuffix}`;
+  const waMsg = encodeURIComponent('Hola, tengo una duda sobre soporte. \u00BFMe puedes apoyar?');
+  const waUrl = `https://wa.me/${collab.phone}?text=${waMsg}`;
+
+  return `
+    <div class="collab-card">
+      <div class="card-top">
+        <div class="card-avatar">${collab.initials}</div>
+        <div class="card-meta">
+          <div class="card-name">${collab.name}</div>
+          <div class="card-role">${collab.role}</div>
+        </div>
+        <button class="card-expand-btn" onclick="toggleCard('${cardId}')" aria-label="Ver detalle">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
+      <div class="card-body" id="${cardId}">
+        <div class="card-divider"></div>
+        <div class="tasks-label">Temas que resuelve</div>
+        <div class="task-list">
+          ${collab.tasks.map(t => `<span class="task-chip">${t}</span>`).join('')}
+        </div>
+        <a href="${waUrl}" class="wa-btn" target="_blank">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Contactar por WhatsApp
+        </a>
+      </div>
+    </div>
+  `;
+}
+
+/* ===== INJECT CARDS ===== */
+function injectCards() {
+  // Ventas y clientes
+  document.getElementById('collab-johan').innerHTML = buildCard(collaborators[1], 'ventas');
+
+  // Inventario
+  document.getElementById('collab-johan-inv').innerHTML = buildCard(collaborators[1], 'inv');
+
+  // Envios
+  document.getElementById('collab-jesus').innerHTML = buildCard(collaborators[0], 'env');
+  document.getElementById('collab-alejandro-env').innerHTML = buildCard(collaborators[5], 'env');
+
+  // Compras
+  document.getElementById('collab-johan-compras').innerHTML = buildCard(collaborators[1], 'compras');
+
+  // Marketing
+  document.getElementById('collab-marianne').innerHTML = buildCard(collaborators[3], 'mkt');
+
+  // Administracion
+  document.getElementById('collab-mateo').innerHTML = buildCard(collaborators[2], 'adm');
+  document.getElementById('collab-david').innerHTML = buildCard(collaborators[4], 'adm');
+
+  // Almacen
+  document.getElementById('collab-alejandro').innerHTML = buildCard(collaborators[5], 'alm');
+
+  // Digital
+  document.getElementById('collab-jesus-dig').innerHTML = buildCard(collaborators[0], 'dig');
+
+  // Fix FAQ David link
+  const faq2wa = document.getElementById('faq2-wa');
+  if(faq2wa) faq2wa.href = `https://wa.me/525613258633?text=${encodeURIComponent('Hola David, tengo una duda sobre soporte. \u00BFMe puedes apoyar?')}`;
+  const faq4wa = document.getElementById('faq4-wa');
+  if(faq4wa) faq4wa.href = `https://wa.me/525644185247?text=${encodeURIComponent('Hola Mateo, tengo una duda sobre soporte. \u00BFMe puedes apoyar?')}`;
+}
+
+/* ===== BUILD AREAS PAGE ===== */
+const areasData = [
+  { id: 'ventas', label: 'Ventas y Clientes', collabs: [1] },
+  { id: 'inventario', label: 'Inventario y Precios', collabs: [1] },
+  { id: 'envios', label: 'Envios y Logistica', collabs: [0, 5] },
+  { id: 'compras', label: 'Compras', collabs: [1] },
+  { id: 'marketing', label: 'Marketing', collabs: [3] },
+  { id: 'admin', label: 'Administracion', collabs: [2, 4] },
+  { id: 'almacen', label: 'Almacen', collabs: [5] },
+  { id: 'digital', label: 'Soporte Digital', collabs: [0, 4] }
+];
+
+function buildAreasPage() {
+  const container = document.getElementById('areas-page-content');
+  let html = '';
+  areasData.forEach(area => {
+    html += `<div style="margin-bottom:24px;">`;
+    html += `<div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;color:var(--text);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border-subtle);">${area.label}</div>`;
+    area.collabs.forEach(idx => {
+      html += buildCard(collaborators[idx], `area-${area.id}-${idx}`);
+    });
+    html += `</div>`;
+  });
+  container.innerHTML = html;
+}
+
+/* ===== DIRECTORY ===== */
+function buildDirectory() {
+  const list = document.getElementById('dir-list');
+  const waMsg = encodeURIComponent('Hola, tengo una duda sobre soporte. \u00BFMe puedes apoyar?');
+  list.innerHTML = collaborators.map(c => `
+    <div class="dir-item">
+      <div class="dir-avatar">${c.initials}</div>
+      <div class="dir-info">
+        <div class="dir-name">${c.name}</div>
+        <div class="dir-area">${c.areas[0]}</div>
+      </div>
+      <a href="https://wa.me/${c.phone}?text=${waMsg}" class="dir-wa" target="_blank" aria-label="WhatsApp ${c.name}">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </a>
+    </div>
+  `).join('');
+}
+
+/* ===== TOGGLE CARD ===== */
+function toggleCard(cardId) {
+  const body = document.getElementById(cardId);
+  const btn = body.closest('.collab-card').querySelector('.card-expand-btn');
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  btn.classList.toggle('open', !isOpen);
+}
+
+/* ===== TOGGLE FAQ ===== */
+function toggleFaq(id) {
+  const item = document.getElementById(id);
+  item.classList.toggle('open');
+}
+
+/* ===== NAVIGATION ===== */
+let currentPage = 'inicio';
+function switchPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.getElementById('nav-' + page).classList.add('active');
+  currentPage = page;
+  window.scrollTo(0, 0);
+}
+
+/* ===== SCROLL TO AREA ===== */
+function scrollToArea(areaId) {
+  switchPage('inicio');
+  setTimeout(() => {
+    const map = {
+      ventas: 'area-ventas',
+      inventario: 'area-inventario',
+      envios: 'area-envios',
+      compras: 'area-compras',
+      marketing: 'area-marketing',
+      admin: 'area-admin',
+      almacen: 'area-almacen',
+      digital: 'area-digital'
+    };
+    const el = document.getElementById(map[areaId]);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  }, 50);
+}
+
+/* ===== SEARCH ===== */
+const searchInput = document.getElementById('search-input');
+const searchResults = document.getElementById('search-results');
+const searchList = document.getElementById('search-list');
+const searchEmpty = document.getElementById('search-empty');
+const searchClear = document.getElementById('search-clear');
+const heroPillsSection = document.getElementById('hero-pills-section');
+
+searchInput.addEventListener('input', function() {
+  const q = this.value.trim().toLowerCase();
+  searchClear.style.display = q ? 'flex' : 'none';
+
+  if (!q) {
+    searchResults.classList.remove('active');
+    heroPillsSection.style.display = '';
+    return;
+  }
+
+  searchResults.classList.add('active');
+  heroPillsSection.style.display = 'none';
+
+  const waMsg = encodeURIComponent('Hola, tengo una duda sobre soporte. \u00BFMe puedes apoyar?');
+
+  // Find unique collaborators that match
+  const matched = new Map();
+  searchIndex.forEach(item => {
+    if (item.task.toLowerCase().includes(q) || item.name.toLowerCase().includes(q)) {
+      if (!matched.has(item.name)) {
+        matched.set(item.name, []);
+      }
+      matched.get(item.name).push(item.task);
+    }
+  });
+
+  if (matched.size === 0) {
+    searchList.innerHTML = '';
+    searchEmpty.classList.remove('hidden');
+    return;
+  }
+
+  searchEmpty.classList.add('hidden');
+  let html = '';
+  matched.forEach((tasks, name) => {
+    const collab = collaborators.find(c => c.name === name);
+    const waUrl = `https://wa.me/${collab.phone}?text=${waMsg}`;
+    html += `
+      <div class="search-result-item">
+        <div class="sr-info">
+          <div class="sr-name">${name}</div>
+          <div class="sr-task">${tasks.slice(0,2).join(', ')}${tasks.length > 2 ? ' +' + (tasks.length-2) + ' mas' : ''}</div>
+        </div>
+        <a href="${waUrl}" class="sr-wa" target="_blank">WhatsApp</a>
+      </div>
+    `;
+  });
+  searchList.innerHTML = html;
+});
+
+searchClear.addEventListener('click', function() {
+  searchInput.value = '';
+  searchClear.style.display = 'none';
+  searchResults.classList.remove('active');
+  heroPillsSection.style.display = '';
+  searchInput.focus();
+});
+
+/* ===== INIT ===== */
+injectCards();
+buildDirectory();
+buildAreasPage();
+</script>
 </body>
 </html>
