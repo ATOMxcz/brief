@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Actividades por Colaborador | LEVZEN</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #5EBD2A;
+    --green-dark: #4AA31F;
+    --green-light: #EAF6DE;
+    --green-mid: #C5E8A8;
+    --black: #111111;
+    --dark: #1E2420;
+    --gray-800: #2C3128;
+    --gray-600: #596158;
+    --gray-400: #8A9188;
+    --gray-200: #D8DDD6;
+    --gray-100: #F0F3EE;
+    --gray-50: #F7F9F6;
+    --white: #FFFFFF;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.10);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--gray-50);
+    color: var(--dark);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── NAV ── */
+  .nav {
+    background: var(--black);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 2px solid var(--green);
+  }
+  .nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+  }
+  .nav-brand {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 20px;
+    color: var(--white);
+    letter-spacing: 1px;
+    text-decoration: none;
+  }
+  .nav-brand span { color: var(--green); }
+  .nav-links { display: flex; gap: 4px; }
+  .nav-link {
+    font-family: 'Barlow', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 8px 18px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: var(--gray-400);
+    transition: all 0.2s;
+  }
+  .nav-link:hover { color: var(--white); background: rgba(255,255,255,0.06); }
+  .nav-link.active { color: var(--green); background: rgba(94,189,42,0.1); }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--black);
+    padding: 56px 24px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 300px;
+    background: radial-gradient(ellipse, rgba(94,189,42,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-label {
+    display: inline-block;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 16px;
+    padding: 6px 14px;
+    border: 1px solid rgba(94,189,42,0.3);
+    border-radius: 20px;
+  }
+  .header-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: clamp(30px, 5vw, 52px);
+    color: var(--white);
+    line-height: 1;
+    letter-spacing: -1px;
+    margin-bottom: 14px;
+  }
+  .header-title span { color: var(--green); }
+  .header-sub {
+    font-size: 15px;
+    color: var(--gray-400);
+    max-width: 520px;
+    margin: 0 auto;
+    font-weight: 300;
+  }
+
+  /* ── STATS ── */
+  .stats-bar {
+    max-width: 1200px;
+    margin: -28px auto 0;
+    padding: 0 24px;
+    position: relative;
+    z-index: 2;
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    border: 1px solid var(--gray-200);
+  }
+  .stat {
+    padding: 28px 24px;
+    text-align: center;
+    position: relative;
+  }
+  .stat + .stat::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 20%; height: 60%;
+    width: 1px;
+    background: var(--gray-200);
+  }
+  .stat-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 40px;
+    color: var(--green);
+    line-height: 1;
+    display: block;
+  }
+  .stat-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--gray-600);
+    margin-top: 6px;
+    display: block;
+  }
+
+  /* ── TOOLBAR ── */
+  .toolbar {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 24px 0;
+  }
+  .toolbar-inner {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+  }
+  .search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+  }
+  .search-icon {
+    position: absolute;
+    left: 14px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray-400);
+    width: 16px; height: 16px;
+    pointer-events: none;
+  }
+  .search-input {
+    width: 100%;
+    height: 42px;
+    border: 1.5px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    padding: 0 14px 0 40px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--dark);
+    background: var(--gray-50);
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  .search-input:focus { border-color: var(--green); background: var(--white); }
+  .search-input::placeholder { color: var(--gray-400); }
+  .filter-select {
+    height: 42px;
+    border: 1.5px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    padding: 0 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--dark);
+    background: var(--gray-50);
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    min-width: 180px;
+  }
+  .filter-select:focus { border-color: var(--green); background: var(--white); }
+  .btn-group { display: flex; gap: 8px; }
+  .btn {
+    height: 42px;
+    padding: 0 18px;
+    border-radius: var(--radius-sm);
+    font-family: 'Barlow', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+  }
+  .btn-outline {
+    background: transparent;
+    border: 1.5px solid var(--gray-200);
+    color: var(--gray-600);
+  }
+  .btn-outline:hover { border-color: var(--green); color: var(--green); }
+  .btn-primary {
+    background: var(--green);
+    color: var(--white);
+  }
+  .btn-primary:hover { background: var(--green-dark); }
+
+  /* ── RESULTS INFO ── */
+  .results-info {
+    max-width: 1200px;
+    margin: 16px auto 0;
+    padding: 0 24px;
+    font-size: 13px;
+    color: var(--gray-400);
+  }
+  .results-info strong { color: var(--green); font-weight: 600; }
+
+  /* ── CARDS ── */
+  .cards-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px 24px 64px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 16px;
+    align-items: start;
+  }
+
+  .collab-card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+  }
+  .collab-card:hover { box-shadow: var(--shadow-md); }
+  .collab-card.hidden { display: none; }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 20px 18px;
+    cursor: pointer;
+    user-select: none;
+    border-bottom: 1px solid transparent;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .card-header:hover { background: var(--gray-50); }
+  .collab-card.open .card-header {
+    border-bottom-color: var(--gray-200);
+    background: var(--gray-50);
+  }
+
+  .card-avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: var(--green-light);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--green-dark);
+    flex-shrink: 0;
+  }
+  .card-avatar.dir { background: var(--green); color: var(--white); }
+  .card-avatar.gray { background: var(--gray-100); color: var(--gray-600); }
+
+  .card-meta { flex: 1; min-width: 0; }
+  .card-name {
+    font-family: 'Barlow', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--dark);
+    display: block;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .card-role {
+    font-size: 12px;
+    color: var(--gray-600);
+    display: block;
+    margin-top: 2px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .card-area-tag {
+    display: inline-block;
+    margin-top: 6px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--green-dark);
+    background: var(--green-light);
+    padding: 3px 9px;
+    border-radius: 20px;
+  }
+  .card-area-tag.gray-tag { background: var(--gray-100); color: var(--gray-600); }
+
+  .card-toggle {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--gray-100);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.2s, transform 0.25s;
+  }
+  .card-toggle svg { width: 14px; height: 14px; color: var(--gray-600); transition: transform 0.25s; }
+  .collab-card.open .card-toggle { background: var(--green-light); }
+  .collab-card.open .card-toggle svg { transform: rotate(180deg); color: var(--green-dark); }
+
+  /* Card body */
+  .card-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1);
+  }
+  .collab-card.open .card-body { max-height: 2000px; }
+
+  .card-body-inner { padding: 20px; }
+
+  .card-summary {
+    font-size: 13.5px;
+    color: var(--gray-600);
+    line-height: 1.6;
+    margin-bottom: 18px;
+    padding: 14px 16px;
+    background: var(--gray-50);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--green);
+  }
+
+  .card-info-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+  }
+  .card-info-item {
+    font-size: 12px;
+  }
+  .card-info-item .label {
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--gray-400);
+    display: block;
+    margin-bottom: 2px;
+  }
+  .card-info-item .value {
+    color: var(--dark);
+    font-weight: 500;
+  }
+
+  .activities-section { margin-bottom: 16px; }
+  .activities-title {
+    font-family: 'Barlow', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--gray-400);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .activities-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--gray-200);
+  }
+  .activity-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .activity-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13.5px;
+    color: var(--gray-600);
+    line-height: 1.5;
+  }
+  .activity-item::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    flex-shrink: 0;
+    margin-top: 7px;
+  }
+  .activity-item.secondary::before { background: var(--gray-400); }
+
+  .block-label {
+    font-family: 'Barlow', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    color: var(--dark);
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--gray-200);
+    margin-top: 14px;
+  }
+  .block-label:first-child { margin-top: 0; }
+
+  .tags-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+  .act-tag {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: var(--green-light);
+    color: var(--green-dark);
+  }
+  .act-tag.blue { background: #E3F2FD; color: #1565C0; }
+  .act-tag.orange { background: #FFF3E0; color: #E65100; }
+  .act-tag.gray { background: var(--gray-100); color: var(--gray-600); }
+  .act-tag.purple { background: #F3E5F5; color: #6A1B9A; }
+
+  /* No results */
+  .no-results {
+    grid-column: 1/-1;
+    text-align: center;
+    padding: 60px 24px;
+    color: var(--gray-400);
+    font-size: 15px;
+  }
+  .no-results strong { display: block; font-size: 18px; color: var(--gray-600); margin-bottom: 8px; }
+
+  /* FOOTER */
+  .footer {
+    background: var(--dark);
+    color: var(--gray-400);
+    text-align: center;
+    padding: 32px 24px;
+  }
+  .footer p { font-size: 13px; margin-bottom: 12px; }
+  .footer-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--green);
+    text-decoration: none;
+    padding: 10px 22px;
+    border: 1.5px solid var(--green);
+    border-radius: 6px;
+    transition: all 0.2s;
+  }
+  .footer-link:hover { background: var(--green); color: var(--white); }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .cards-section { grid-template-columns: 1fr; padding: 20px 16px 48px; }
+    .toolbar-inner { flex-direction: column; align-items: stretch; }
+    .search-wrap, .filter-select { min-width: 0; width: 100%; }
+    .btn-group { justify-content: flex-end; }
+    .stats-grid { grid-template-columns: 1fr 1fr 1fr; }
+  }
+  @media (max-width: 600px) {
+    .nav-inner { padding: 0 16px; }
+    .header { padding: 40px 16px 36px; }
+    .stats-bar, .toolbar, .results-info { padding-left: 16px; padding-right: 16px; }
+    .stat { padding: 18px 12px; }
+    .stat-num { font-size: 28px; }
+    .nav-link { padding: 8px 10px; font-size: 12px; }
+    .card-info-row { flex-direction: column; gap: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="organigrama.html" class="nav-brand">LEV<span>ZEN</span></a>
+    <div class="nav-links">
+      <a href="organigrama.html" class="nav-link">Organigrama</a>
+      <a href="actividades.html" class="nav-link active">Actividades</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-label">Uso Interno</div>
+  <h1 class="header-title">Actividades por <span>Colaborador</span></h1>
+  <p class="header-sub">Consulta de funciones, responsabilidades y alcance por integrante del equipo LEVZEN</p>
+</header>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stats-grid">
+    <div class="stat">
+      <span class="stat-num">13</span>
+      <span class="stat-label">Colaboradores</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">9</span>
+      <span class="stat-label">Areas</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">60+</span>
+      <span class="stat-label">Funciones registradas</span>
+    </div>
+  </div>
+</div>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <div class="toolbar-inner">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" class="search-input" id="searchInput" placeholder="Buscar por nombre..." oninput="filterCards()">
+    </div>
+    <select class="filter-select" id="areaFilter" onchange="filterCards()">
+      <option value="">Todas las areas</option>
+      <option value="Direccion General">Direccion General</option>
+      <option value="Operaciones">Operaciones</option>
+      <option value="Administracion y Operaciones">Administracion y Operaciones</option>
+      <option value="Facturacion y Accesos">Facturacion y Accesos</option>
+      <option value="Marketing y Ventas">Marketing y Ventas</option>
+      <option value="Datos e Inteligencia">Datos e Inteligencia</option>
+      <option value="E-commerce y Logistica">E-commerce y Logistica</option>
+      <option value="Almacen y Operacion">Almacen y Operacion</option>
+      <option value="Compras / Catalogo / Sistemas">Compras / Catalogo / Sistemas</option>
+    </select>
+    <div class="btn-group">
+      <button class="btn btn-outline" onclick="collapseAll()">Contraer todo</button>
+      <button class="btn btn-primary" onclick="expandAll()">Expandir todo</button>
+    </div>
+  </div>
+</div>
+
+<div class="results-info" id="resultsInfo">Mostrando <strong id="countVisible">13</strong> colaboradores</div>
+
+<!-- CARDS GRID -->
+<div class="cards-section" id="cardsGrid">
+
+  <!-- 1. PAULO VILCHIS -->
+  <div class="collab-card" data-name="paulo vilchis" data-area="Direccion General">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-avatar dir">PV</div>
+      <div class="card-meta">
+        <span class="card-name">Paulo Vilchis</span>
+        <span class="card-role">Gerente General</span>
+        <span class="card-area-tag">Direccion General</span>
+      </div>
+      <div class="card-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
+    </div>
+    <div class="card-body">
+      <div class="card-body-inner">
+        <div class="card-summary">Responsable de la direccion general del negocio y de la toma de decisiones estrategicas que definen el rumbo de LEVZEN.</div>
+        <div class="card-info-row">
+          <div class="card-info-item"><span class="label">Reporta a</span><span class="value">— Direccion maxima</span></div>
+          <div class="card-info-item"><span class="label">Area</span><span class="value">Direccion General</span></div>
+        </div>
+        <div class="activities-section">
+          <div class="activities-title">Actividades principales</div>
+          <ul class="activity-list">
+            <li class="activity-item">Direccion general del negocio, definiendo prioridades y objetivos de corto y largo plazo.</li>
+            <li class="activity-item">Toma de decisiones estrategicas sobre productos, operaciones, personas y crecimiento.</li>
+            <li class="activity-item">Validacion de propuestas e iniciativas presentadas por las distintas areas.</li>
+            <li class="activity-item">Supervision general de areas y responsables, asegurando alineacion y desempeno.</li>
+            <li class="activity-item">Revision periodica de resultados operativos, comerciales y administrativos del negocio.</li>
+          </ul>
+        </div>
+        <div class="tags-row">
+          <span class="act-tag">Estrategia</span>
+          <span class="act-tag">Liderazgo</span>
+          <span class="act-tag">Toma de decisiones</span>
+          <span class="act-tag">Supervision</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. JOHAN MARTINEZ -->
+  <div class="collab-card" data-name="johan martinez" data-area="Operaciones">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-avatar">JM</div>
+      <div class="card-meta">
+        <span class="card-name">Johan Martinez</span>
+        <span class="card-role">Gerencia de Operaciones</span>
+        <span class="card-area-tag">Operaciones</span>
+      </div>
+      <div class="card-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
+    </div>
+    <div class="card-body">
+      <div class="card-body-inner">
+        <div class="card-summary">Coordina y da soporte a la operacion diaria, gestion de ventas y control de inventario, atendiendo incidencias clave del negocio.</div>
+        <div class="card-info-row">
+          <div class="card-info-item"><span class="label">Reporta a</span><span class="value">Paulo Vilchis</span></div>
+          <div class="card-info-item"><span class="label">Area</span><span class="value">Operaciones</span></div>
+        </div>
+        <div class="activities-section">
+          <div class="activities-title">Actividades principales</div>
+          <ul class="activity-list">
+            <li class="activity-item">Atencion a clientes y soporte directo al equipo de ventas para la resolucion de dudas y requerimientos.</li>
+            <li class="activity-item">Resolucion de casos especiales que requieren criterio operativo o comercial elevado.</li>
+            <li class="activity-item">Gestion de compras operativas para asegurar continuidad del stock y la operacion.</li>
+            <li class="activity-item">Actualizaciones de inventario en sistema, manteniendo la integridad de los datos disponibles.</li>
+            <li class="activity-item">Apoyo general a vendedores, orientandolos en procesos, productos y plataforma.</li>
+            <li class="activity-item">Atencion de dudas individuales y grupales al equipo de ventas para elevar su desempeno.</li>
+            <li class="activity-item">Actualizacion de precios generales segun cambios del mercado o instrucciones de direccion.</li>
+            <li class="activity-item">Orden y control de productos agotados y disponibles para garantizar informacion precisa.</li>
+          </ul>
+        </div>
+        <div class="activities-section">
+          <div class="activities-title">Actividades secundarias / en desarrollo</div>
+          <ul class="activity-list">
+            <li class="activity-item secondary">Organizacion y planeacion operativa de manera ocasional.</li>
+            <li class="activity-item secondary">Propuestas de mejora para procesos internos.</li>
+            <li class="activity-item secondary">Posible incorporacion a actividades de marketing.</li>
+          </ul>
+        </div>
+        <div class="tags-row">
+          <span class="act-tag">Operaciones</span>
+          <span class="act-tag">Inventario</span>
+          <span class="act-tag blue">Ventas</span>
+          <span class="act-tag blue">Atencion a cliente</span>
+          <span class="act-tag orange">Compras</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. MATEO VILCHIS -->
+  <div class="collab-card" data-name="mateo vilchis" data-area="Administracion y Operaciones">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-avatar">MV</div>
+      <div class="card-meta">
+        <span class="card-name">Mateo Vilchis</span>
+        <span class="card-role">Administracion y Operaciones</span>
+        <span class="card-area-tag">Administracion y Operaciones</span>
+      </div>
+      <div class="card-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
+    </div>
+    <div class="card-body">
+      <div class="card-body-inner">
+        <div class="card-summary">Da seguimiento a procesos administrativos y operativos clave para el control y la salud financiera del negocio.</div>
+        <div class="card-info-row">
+          <div class="card-info-item"><span class="label">Reporta a</span><span class="value">Paulo Vilchis</span></div>
+          <div class="card-info-item"><span class="label">Area</span><span class="value">Administracion y Operaciones</span></div>
+        </div>
+        <div class="activities-section">
+          <div class="activities-title">Actividades principales</div>
+          <ul class="activity-list">
+            <li class="activity-item">Registro de pagos recibidos, asegurando la conciliacion y el control de ingresos del negocio.</li>
+            <li class="activity-item">Envio de pedidos y notas a clientes, dando seguimiento a la documentacion comercial.</li>
+            <li class="activity-item">Revision de cotizaciones para validar precios, condiciones y viabilidad antes de su aprobacion.</li>
+            <li class="activity-item">Elaboracion de nomina, calculando percepciones, deducciones y asegurando su pago oportuno.</li>
+            <li class="activity-item">Facturacion de operaciones, generando los comprobantes fiscales correspondientes a cada transaccion.</li>
+          </ul>
+        </div>
+        <div class="tags-row">
+          <span class="act-tag">Administracion</span>
+          <span class="act-tag orange">Nomina</span>
+          <span class="act-tag">Facturacion</span>
+          <span class="act-tag blue">Pagos</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. DAVID NIETO -->
+  <div class="collab-card" data-name="david nieto" data-area="Facturacion y Accesos">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-avatar">DN</div>
+      <div class="card-meta">
+        <span class="card-name">David Nieto</span>
+        <span class="card-role">Facturacion y Accesos</span>
+        <span class="card-area-tag">Facturacion y Accesos</span>
+      </div>
+      <div class="card-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
+    </div>
+    <div class="card-body">
+      <div class="card-body-inner">
+        <div class="card-summary">Brinda soporte en accesos a plataforma, cuentas de clientes y procesos de facturacion relacionados con la operacion comercial.</div>
+        <div class="card-info-row">
+          <div class="card-info-item"><span class="label">Reporta a</span><span class="value">Paulo Vilchis</span></div>
+          <div class="card-info-item"><span class="label">Area</span><span class="value">Facturacion y Accesos</span></div>
+        </div>
+        <div class="activities-section">
+          <div class="activities-title">Actividades principales</div>
+          <ul class="activity-list">
+            <li class="activity-item">Gestion de accesos a la plataforma digital de LEVZEN, habilitando o bloqueando cuentas segun corresponda.</li>
+            <li class="activity-item">Resolucion de cuentas y problemas de acceso de clientes que no pueden ingresar o tienen incidencias en su perfil.</li>
+            <li class="activity-item">Soporte relacionado con usuarios, perfiles e incidencias en plataforma que afectan la experiencia del cliente.</li>
+            <li class="activity-item">Facturacion de ventas, generando CFDI y comprobantes fiscales conforme a los requerimientos del cliente.</li>
+            <li class="activity-item">Seguimiento a solicitudes relacionadas con acceso y cuentas, asegurando resolucion oportuna y registro de casos.</li>
+          </ul>
+        </div>
+        <div class="tags-row">
+          <span class="act-tag">Facturacion</span>
+          <span class="act-tag blue">Accesos</span>
+          <span class="act-tag blue">Soporte</span>
+          <span class="act-tag gray">Plataforma</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. CYNTHIA ROGER -->
+  <div class="collab-card" data-name="cynthia roger" data-area="Marketing y Ventas">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-avatar">CR</div>
+      <div class="card-meta">
+        <span class="card-name">Cynthia Roger</span>
+        <span class="card-role">Marketing y Ventas</span>
+        <span class="card-area-tag">Marketing y Ventas</span>
+      </div>
+      <div class="card-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
+    </div>
+    <div class="card-body">
+      <div class="card-body-inner">
+        <div class="card-summary">Coordina las actividades del area comercial y de marketing, dando seguimiento al equipo y a la ejecucion de contenidos e iniciativas.</div>
+        <div class="card-info-row">
+          <div class="card-info-item"><span class="label">Reporta a</span><span class="value">Paulo Vilchis</span></div>
+          <div class="card-info-item"><span class="label">Area</span><span class="value">Marketing y Ventas</span></div>
+        </div>
+        <div class="activities-section">
+          <div class="activities-title">Actividades principales</div>
+          <ul class="activity-list">
+            <li class="activity-item">Coordinacion de actividades del area de marketing, asegurando que los proyectos avancen conforme a los objetivos definidos.</li>
+            <li class="activity-item">Comunicacion constante con Marianne Sandoval para alinear la ejecucion de contenidos y campanas digitales.</li>
+            <li class="activity-item">Coordinacion con el equipo de contenido y redes sociales para garantizar coherencia en la comunicacion de la marca.</li>
+            <li class="activity-item">Seguimiento general de iniciativas comerciales y de comunicacion, reportando avances y detectando oportunidades.</li>
+            <li class="activity-item">Apoyo en la definicion de mensajes comerciales y alineacion de la estrategia de ventas con el area de marketing.</li>
+          </ul>
+        </div>
+        <div class="tags-row">
+          <span class="act-tag">Marketing</span>
+          <span class="act-tag blue">Ventas</span>
+          <span class="act-tag purple">Coordinacion</span>
+          <span class="act-tag">Contenido</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. MARIANNE SANDOVAL -->
+  <div class="collab-card" data-name="marianne sandoval" data-area="Marketing y Ventas">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-avatar gray">MS</div>
+      <div class="card-meta">
+        <span class="card-name">Marianne Sandoval</span>
+        <span class="card-role">Incentivos, Marketing y Contenido</span>
+        <span class="card-area-tag gray-tag">Marketing y Ventas</span>
+      </div>
+      <div class="card-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
+    </div>
+    <div class="card-body">
+      <div class="card-body-inner">
+        <div class="card-summary">Gestiona contenidos, campanas digitales, comunicacion de marca e incentivos comerciales para apoyar el crecimiento de LEVZEN.</div>
+        <div class="card-info-row">
+          <div class="card-info-item"><span class="label">Reporta a</span><span class="value">Cynthia Roger</span></div>
+          <div class="card-info-item"><span class="label">Area</span><span class="value">Marketing y Ventas</span></div>
+        </div>
+        <div class="activities-section">
+          <div class="activities-title">Actividades por bloque</div>
+          <div class="block-label">Marketing y contenido digital</div>
+          <ul class="activity-list">
+            <li class="activity-item">Planeacion mensual de la parrilla de contenido para todas las redes sociales activas de LEVZEN.</li>
+            <li class="activity-item">Coordinacion con el disenador para la produccion de posts y materiales graficos alineados a la identidad de marca.</li>
+            <li class="activity-item">Planeacion y supervision de la produccion de videos mensuales para TikTok y Reels.</li>
+            <li class="activity-item">Publicacion y seguimiento del contenido en plataformas digitales, asegurando constancia y calidad.</li>
+            <li class="activity-item">Implementacion de estrategias con herramientas como Open Claude y Memo para optimizar la comunicacion.</li>
+          </ul>
+          <div class="block-label">Publicidad y campanas</div>
+          <ul class="activity-list">
+            <li class="activity-item">Planeacion y ejecucion de campanas en redes sociales con objetivos de alcance, engagement y conversion.</li>
+            <li class="activity-item">Definicion de promociones, mensajes comerciales y temporalidades para comunicaciones clave.</li>
+            <li class="activity-item">Monitoreo y optimizacion de anuncios para mejorar el rendimiento y reducir el costo por resultado.</li>
+          </ul>
+          <div class="block-label">Analisis y reportes</div>
+          <ul class="activity-list">
+            <li class="activity-item">Elaboracion del reporte mensual de metricas de redes sociales y campanas de publicidad.</li>
+            <li class="activity-item">Analisis del desempeno de publicaciones y campanas para identificar lo que funciona y lo que debe ajustarse.</li>
+            <li class="activity-item">Identificacion de oportunidades de mejora y propuestas para elevar el impacto del contenido.</li>
+            <li class="activity-item">Gestion del esquema de incentivos para el equipo de vendedores.</li>
+          </ul>
+          <div class="block-label">Atencion y comunicacion interna</div>
+          <ul class="activity-list">
+            <li class="activity-item">Respuesta a mensajes en todas las redes sociales de LEVZEN, atendiendo consultas y comentarios.</li>
+            <li class="activity-item">Diseno de comunicaciones de anuncios y avisos internos para el equipo.</li>
+            <li class="activity-item">Coordinacion con el disenador para la produccion del Catalogo 2026.</li>
+          </ul>
+        </div>
+        <div class="tags-row">
+          <span class="act-tag">Contenido</span>
+          <span class="act-tag">Redes sociales</span>
+          <span class="act-tag orange">Campanas</span>
+          <span class="act-tag blue">Analisis</span>
+          <span class="act-tag purple">Incentivos</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. EMILIANO SOTELO -->
+  <div class="collab-card" data-name="emiliano sotelo" data-area="Datos e Inteligencia">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-avatar gray">ES</div>
+      <div class="card-meta">
+        <span class="card-name">Emiliano Sotelo</span>
+        <span class="card-role">Analista de Datos</span>
+        <span class="card-area-tag gray-tag">Datos e Inteligencia</span>
+      </div>
+      <div class="card-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
+    </div>
+    <div class="card-body">
+      <div class="card-body-inner">
+        <div class="card-summary">Se encarga del manejo, limpieza, automatizacion y analisis de datos para generar informacion util a la operacion y la toma de decisiones.</div>
+        <div class="card-info-row">
+          <div class="card-info-item"><span class="label">Reporta a</span><span class="value">Luis Antonio / Sistemas</span></div>
+          <div class="card-info-item"><span class="label">Area</span><span class="value">Datos e Inteligencia</span></div>
+        </div>
+        <div class="activities-section">
+          <div class="activities-title">Actividades por bloque</div>
+          <div class="block-label">Extraccion y limpieza de datos</div>
+          <ul class="activity-list">
+            <li class="activity-item">Conexion a fuentes de datos y ejecucion de scripts en Python para consumir informacion desde la API de Odoo.</li>
+            <li class="activity-item">Obtencion de datos actualizados de inventarios, ventas y clientes para su procesamiento.</li>
+            <li class="activity-item">Limpieza con Pandas: manejo de valores nulos, eliminacion de duplicados y normalizacion de formatos.</li>
+            <li class="activity-item">Validacion de integridad comparando datos del sistema contra la realidad operativa del negocio.</li>
+          </ul>
+          <div class="block-label">Generacion de reportes y visualizacion</div>
+          <ul class="activity-list">
+            <li class="activity-item">Automatizacion y refinamiento de scripts para generar archivos Excel y dashboards operativos.</li>
+            <li class="activity-item">Entrega oportuna de reportes de ventas e inventario para la toma de decisiones.</li>
+          </ul>
+          <div class="block-label">Automatizacion de procesos</div>
+          <ul class="activity-list">
+            <li class="activity-item">Mantenimiento y revision de scripts ante cambios en la API de Odoo o fallas en el servidor.</li>
+            <li class="activity-item">Deteccion de tareas manuales repetitivas y desarrollo de herramientas Python para automatizarlas.</li>
+          </ul>
+          <div class="block-label">Comunicacion y estrategia</div>
+          <ul class="activity-list">
+            <li class="activity-item">Reuniones de alineacion con responsables del negocio para identificar nuevas necesidades de informacion.</li>
+            <li class="activity-item">Apoyo con analisis estrategicos sobre inventario, rotacion y productos con bajo movimiento.</li>
+          </ul>
+          <div class="block-label">Desarrollo profesional</div>
+          <ul class="activity-list">
+            <li class="activity-item secondary">Practica con nuevas librerias y exploracion de Machine Learning aplicado a datos de la empresa.</li>
+            <li class="activity-item secondary">Analisis predictivo para anticipar comportamientos de ventas e inventario.</li>
+          </ul>
+        </div>
+        <div class="tags-row">
+          <span class="act-tag blue">Python</span>
+          <span class="act-tag blue">Odoo API</span>
+          <span class="act-tag">Datos</span>
+          <span class="act-tag">Automatizacion</span>
+          <span class="act-tag purple">Reportes</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. JESUS CHAVEZ -->
+  <div class="collab-card" data-name="jesus chavez cofi" data-area="E-commerce y Logistica">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-avatar gray">JC</div>
+      <div class="card-meta">
+        <span class="card-name">Jesus Chavez (Cofi)</span>
+        <span class="card-role">E-commerce y Envios</span>
+        <span class="card-area-tag gray-tag">E-commerce y Logistica</span>
+      </div>
+      <div class="card-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
+    </div>
+    <div class="card-body">
+      <div class="card-body-inner">
+        <div class="card-summary">Gestiona procesos clave de envios y el mantenimiento comercial del catalogo digital de LEVZEN.</div>
+        <div class="card-info-row">
+          <div class="card-info-item"><span class="label">Reporta a</span><span class="value">Coordinacion interna</span></div>
+          <div class="card-info-item"><span class="label">Area</span><span class="value">E-commerce y Logistica</span></div>
+        </div>
+        <div class="activities-section">
+          <div class="activities-title">Actividades principales</div>
+          <ul class="activity-list">
+            <li class="activity-item">Generacion de guias de envio, procesando cada pedido y asignando la paqueteria correspondiente segun destino y condiciones.</li>
+            <li class="activity-item">Gestion operativa de envios, dando seguimiento al status de cada paquete hasta su entrega al cliente.</li>
+            <li class="activity-item">Subida de productos nuevos a la tienda digital, asegurando que los datos, imagenes y categorias esten correctas.</li>
+            <li class="activity-item">Actualizacion de precios en la plataforma de e-commerce conforme a los cambios aprobados por el area correspondiente.</li>
+            <li class="activity-item">Mejora de fotografias de producto usando herramientas de inteligencia artificial para elevar la calidad visual del catalogo.</li>
+            <li class="activity-item">Optimizacion continua del catalogo digital, revisando fichas, descripciones y atributos para mejorar la experiencia de compra.</li>
+          </ul>
+        </div>
+        <div class="tags-row">
+          <span class="act-tag orange">Envios</span>
+          <span class="act-tag blue">E-commerce</span>
+          <span class="act-tag">Catalogo</span>
+          <span class="act-tag purple">IA</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9. CORBA HERNANDEZ -->
+  <div class="collab-card" data-name="corba hernandez" data-area="Almacen y Operacion">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-avatar gray">CH</div>
+      <div class="card-meta">
+        <span class="card-name">Corba Hernandez</span>
+        <span class="card-role">Gerente de Almacen / Apoyo Operativo</span>
+        <span class="card-area-tag gray-tag">Almacen y Operacion</span>
+      </div>
+      <div class="card-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
+    </div>
+    <div class="card-body">
+      <div class="card-body-inner">
+        <div class="card-summary">Supervisa y apoya la operacion fisica del almacen, control general, seguimiento logistico y produccion de contenido audiovisual.</div>
+        <div class="card-info-row">
+          <div class="card-info-item"><span class="label">Reporta a</span><span class="value">Johan Martinez</span></div>
+          <div class="card-info-item"><span class="label">Area</span><span class="value">Almacen y Operacion</span></div>
+        </div>
+        <div class="activities-section">
+          <div class="activities-title">Actividades por bloque</div>
+          <div class="block-label">Operacion de almacen</div>
+          <ul class="activity-list">
+            <li class="activity-item">Revision del orden y condicion del almacen al inicio del dia para asegurar la operacion correcta.</li>
+            <li class="activity-item">Revision de cierre al final del dia, verificando que el espacio quede en orden para el dia siguiente.</li>
+            <li class="activity-item">Recepcion de mercancia, validando cantidades, condicion y concordancia con las ordenes de compra.</li>
+            <li class="activity-item">Seguimiento a cambios y devoluciones de mercancia, coordinando con las areas correspondientes.</li>
+            <li class="activity-item">Atencion a clientes que acuden directamente al almacen, brindando orientacion y servicio.</li>
+          </ul>
+          <div class="block-label">Apoyo logistico</div>
+          <ul class="activity-list">
+            <li class="activity-item">Seguimiento a rastreos de paquetes y envios en transito para resolver incidencias.</li>
+            <li class="activity-item">Apoyo al equipo externo de mensajeria y logistica cuando se requiere coordinacion adicional.</li>
+            <li class="activity-item">Traslado o recoleccion de mercancia en CDMX cuando aplica por necesidades operativas.</li>
+          </ul>
+          <div class="block-label">Mantenimiento y contenido</div>
+          <ul class="activity-list">
+            <li class="activity-item">Mantenimiento general del espacio fisico del almacen y ajustes no recurrentes que aseguran su funcionalidad.</li>
+            <li class="activity-item">Grabacion de contenido para canales digitales de LEVZEN en coordinacion con el area de marketing.</li>
+            <li class="activity-item">Edicion de materiales audiovisuales para su publicacion en redes sociales.</li>
+          </ul>
+        </div>
+        <div class="tags-row">
+          <span class="act-tag">Almacen</span>
+          <span class="act-tag orange">Logistica</span>
+          <span class="act-tag gray">Contenido</span>
+          <span class="act-tag">Supervision</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10. ANGEL HERNANDEZ -->
+  <div class="collab-card" data-name="angel hernandez" data-area="Almacen y Operacion">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-avatar gray">AH</div>
+      <div class="card-meta">
+        <span class="card-name">Angel Hernandez</span>
+        <span class="card-role">Surtido y Logistica</span>
+        <span class="card-area-tag gray-tag">Almacen y Operacion</span>
+      </div>
+      <div class="card-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
+    </div>
+    <div class="card-body">
+      <div class="card-body-inner">
+        <div class="card-summary">Participa en la preparacion y control de pedidos, asegurando el surtido correcto y soporte logistico en almacen.</div>
+        <div class="card-info-row">
+          <div class="card-info-item"><span class="label">Reporta a</span><span class="value">Corba Hernandez</span></div>
+          <div class="card-info-item"><span class="label">Area</span><span class="value">Almacen y Logistica</span></div>
+        </div>
+        <div class="activities-section">
+          <div class="activities-title">Actividades principales</div>
+          <ul class="activity-list">
+            <li class="activity-item">Surtido de pedidos, seleccionando los productos correctos segun cada orden para su preparacion y despacho.</li>
+            <li class="activity-item">Evidencia fotografica de pedidos antes de su embalaje para respaldo y control de calidad.</li>
+            <li class="activity-item">Preparacion de pedidos, empacando correctamente los productos para garantizar su llegada en buen estado.</li>
+            <li class="activity-item">Control de insumos de empaque, reportando cuando el material se encuentra bajo para evitar interrupciones.</li>
+          </ul>
+        </div>
+        <div class="tags-row">
+          <span class="act-tag">Almacen</span>
+          <span class="act-tag orange">Surtido</span>
+          <span class="act-tag gray">Logistica</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 11. ANDREA -->
+  <div class="collab-card" data-name="andrea" data-area="Almacen y Operacion">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-avatar gray">AN</div>
+      <div class="card-meta">
+        <span class="card-name">Andrea</span>
+        <span class="card-role">Auxiliar de Almacen</span>
+        <span class="card-area-tag gray-tag">Almacen</span>
+      </div>
+      <div class="card-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
+    </div>
+    <div class="card-body">
+      <div class="card-body-inner">
+        <div class="card-summary">Apoya en la recepcion, acomodo y control general de mercancia dentro del almacen.</div>
+        <div class="card-info-row">
+          <div class="card-info-item"><span class="label">Reporta a</span><span class="value">Corba Hernandez</span></div>
+          <div class="card-info-item"><span class="label">Area</span><span class="value">Almacen</span></div>
+        </div>
+        <div class="activities-section">
+          <div class="activities-title">Actividades principales</div>
+          <ul class="activity-list">
+            <li class="activity-item">Recepcion y acomodo de mercancia en almacen, asegurando que cada producto quede ubicado en su lugar correcto.</li>
+            <li class="activity-item">Mantenimiento del orden general del almacen para facilitar el surtido y la operacion diaria.</li>
+            <li class="activity-item">Reporte de faltantes o discrepancias detectadas al responsable de almacen para su atencion oportuna.</li>
+          </ul>
+        </div>
+        <div class="tags-row">
+          <span class="act-tag gray">Almacen</span>
+          <span class="act-tag gray">Recepcion</span>
+          <span class="act-tag gray">Auxiliar</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 12. BRENDA -->
+  <div class="collab-card" data-name="brenda" data-area="Almacen y Operacion">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-avatar gray">BR</div>
+      <div class="card-meta">
+        <span class="card-name">Brenda</span>
+        <span class="card-role">Auxiliar de Almacen y Limpieza</span>
+        <span class="card-area-tag gray-tag">Almacen y Soporte</span>
+      </div>
+      <div class="card-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
+    </div>
+    <div class="card-body">
+      <div class="card-body-inner">
+        <div class="card-summary">Brinda apoyo operativo en almacen y soporte en la limpieza general del espacio, principalmente en turno vespertino.</div>
+        <div class="card-info-row">
+          <div class="card-info-item"><span class="label">Reporta a</span><span class="value">Corba Hernandez</span></div>
+          <div class="card-info-item"><span class="label">Area</span><span class="value">Almacen y Soporte</span></div>
+        </div>
+        <div class="activities-section">
+          <div class="activities-title">Actividades principales</div>
+          <ul class="activity-list">
+            <li class="activity-item">Apoyo en actividades generales del almacen segun requerimientos del dia.</li>
+            <li class="activity-item">Limpieza general del espacio fisico del almacen para mantener condiciones adecuadas de trabajo.</li>
+            <li class="activity-item">Actividades en turno vespertino, principalmente a partir de las 3:15 pm.</li>
+          </ul>
+        </div>
+        <div class="tags-row">
+          <span class="act-tag gray">Almacen</span>
+          <span class="act-tag gray">Auxiliar</span>
+          <span class="act-tag gray">Soporte</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 13. LUIS ANTONIO -->
+  <div class="collab-card" data-name="luis antonio" data-area="Compras / Catalogo / Sistemas">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-avatar gray">LA</div>
+      <div class="card-meta">
+        <span class="card-name">Luis Antonio</span>
+        <span class="card-role">Compras, Catalogo, Precios, Notion e IA</span>
+        <span class="card-area-tag gray-tag">Compras / Catalogo / Sistemas</span>
+      </div>
+      <div class="card-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
+    </div>
+    <div class="card-body">
+      <div class="card-body-inner">
+        <div class="card-summary">Gestiona compras, altas de productos, actualizacion de precios y construccion de sistemas internos con apoyo de Notion e inteligencia artificial.</div>
+        <div class="card-info-row">
+          <div class="card-info-item"><span class="label">Reporta a</span><span class="value">Paulo Vilchis</span></div>
+          <div class="card-info-item"><span class="label">Area</span><span class="value">Compras / Catalogo / Sistemas</span></div>
+        </div>
+        <div class="activities-section">
+          <div class="activities-title">Actividades por bloque</div>
+          <div class="block-label">Area de Compras</div>
+          <ul class="activity-list">
+            <li class="activity-item">Creacion de ordenes de compra completas en sistema con proveedor, productos, cantidades, precios y condiciones.</li>
+            <li class="activity-item">Reporte semanal de compras en Notion con actividad procesada, volumenes y carga de trabajo del area.</li>
+          </ul>
+          <div class="block-label">Catalogo y Precios</div>
+          <ul class="activity-list">
+            <li class="activity-item">Alta de productos nuevos en sistema: nombre, SKU, categoria, proveedor, costo, precio de venta y clave SAT.</li>
+            <li class="activity-item">Documentacion de cada producto nuevo en PDF como respaldo del catalogo interno.</li>
+            <li class="activity-item">Ajuste de precios y costos por cambios de proveedor, documentados en PDF para trazabilidad total.</li>
+          </ul>
+          <div class="block-label">Sistema Notion e Inteligencia Artificial</div>
+          <ul class="activity-list">
+            <li class="activity-item">Desarrollo del ecosistema Notion de LEVZEN junto con Sotelo y Marianne: secciones, bases de datos y vistas.</li>
+            <li class="activity-item">Implementacion de conexiones entre Notion, Odoo y herramientas de IA para automatizar tareas y generar reportes.</li>
+            <li class="activity-item">Diseno y desarrollo de agentes de IA para marketing, seguimiento y analisis competitivo sobre datos reales del negocio.</li>
+            <li class="activity-item">Preparacion de propuestas accionables para Paulo orientadas a mejorar procesos, reducir costos e implementar nuevas iniciativas.</li>
+          </ul>
+        </div>
+        <div class="tags-row">
+          <span class="act-tag orange">Compras</span>
+          <span class="act-tag">Catalogo</span>
+          <span class="act-tag blue">Notion</span>
+          <span class="act-tag purple">IA</span>
+          <span class="act-tag">Odoo</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="no-results" id="noResults" style="display:none;">
+    <strong>Sin resultados</strong>
+    No se encontraron colaboradores que coincidan con los criterios de busqueda.
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <p>LEVZEN — Documento de uso interno. Funciones y responsabilidades vigentes.</p>
+  <a href="organigrama.html" class="footer-link">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Ver organigrama general
+  </a>
+</footer>
+
+<script>
+  function toggleCard(header) {
+    const card = header.closest('.collab-card');
+    card.classList.toggle('open');
+  }
+
+  function expandAll() {
+    document.querySelectorAll('.collab-card:not(.hidden)').forEach(c => c.classList.add('open'));
+  }
+
+  function collapseAll() {
+    document.querySelectorAll('.collab-card').forEach(c => c.classList.remove('open'));
+  }
+
+  function filterCards() {
+    const q = document.getElementById('searchInput').value.toLowerCase().trim();
+    const area = document.getElementById('areaFilter').value;
+    const cards = document.querySelectorAll('.collab-card:not(#noResults)');
+    let visible = 0;
+
+    cards.forEach(card => {
+      const name = card.dataset.name || '';
+      const cardArea = card.dataset.area || '';
+      const matchName = !q || name.includes(q);
+      const matchArea = !area || cardArea === area;
+      const show = matchName && matchArea;
+      card.classList.toggle('hidden', !show);
+      if (show) visible++;
+    });
+
+    document.getElementById('countVisible').textContent = visible;
+    document.getElementById('noResults').style.display = visible === 0 ? 'block' : 'none';
+  }
+</script>
+
+</body>
+</html>
